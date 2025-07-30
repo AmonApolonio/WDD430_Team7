@@ -24,3 +24,12 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.inputTypeRange {
+  -webkit-appearance: none;
+}
+
+.inputTypeRange::-webkit-slider-thumb {
+  cursor: pointer;
+  pointer-events: auto;
+}
