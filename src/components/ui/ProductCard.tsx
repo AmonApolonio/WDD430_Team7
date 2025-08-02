@@ -1,38 +1,24 @@
 "use client";
 
-import {
-  Card,
-  CardContent,
-  CardMedia,
-  Typography,
-  Box,
-  Button as MuiButton,
-} from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { ShoppingItem } from "@/types/shopping";
+import { AddToCartButton } from "@/components/ui/AddToCartButton";
 
 export function ProductCard({
-  imageAlt,
-  imageUrl,
-  productName,
-  sellerName,
-  price,
-  rating,
+  product,
   className,
   children,
 }: {
-  imageAlt: string;
-  imageUrl: string;
-  productName: string;
-  sellerName: string;
-  price: string;
-  rating: number;
+  product: ShoppingItem;
   className?: string;
   children?: React.ReactNode;
 }) {
-  const [imgSrc, setImgSrc] = useState(imageUrl || "/images/placeholder.png");
+  const [imgSrc, setImgSrc] = useState(product.imageUrl || "/images/placeholder.png");
   const [hasErrored, setHasErrored] = useState(false);
+  const router = useRouter();
 
   const handleImageError = () => {
     if (!hasErrored) {
@@ -41,88 +27,40 @@ export function ProductCard({
     }
   };
 
+  const handleCardClick = () => {
+    router.push(`/item/${product.id}`);
+  };
+
   return (
-    <Card
-      className={className}
-      sx={{
-        maxWidth: 256,
-        border: "2px dashed #ccc",
-        boxShadow: "none",
-        transition: "transform 0.1s",
-        "&:hover": {
-          transform: "scale(1.04)",
-        },
-      }}
+    <div
+      className={`min-w-[16rem] text-gray-600 border-2 border-dashed border-orange-300/50 bg-orange-50shadow-none transition-transform duration-100 cursor-pointer hover:scale-105 rounded-lg ${className}`}
+      onClick={handleCardClick}
     >
       <div>
-        <CardMedia
-          component="img"
-          height="120"
-          image={imgSrc}
-          alt={imageAlt || "placeholder"}
+        <img
+          src={imgSrc}
+          alt={product.imageAlt || "placeholder"}
           onError={handleImageError}
-          sx={{ objectFit: "cover" }}
+          className="w-full h-40 object-cover rounded-t-lg"
         />
-        <CardContent sx={{ padding: 1.5 }}>
-          <Typography
-            variant="h6"
-            component="h3"
-            gutterBottom
-            sx={{ fontSize: "1rem" }}
-          >
-            {productName}
-          </Typography>
-          <Typography
-            variant="body2"
-            color="textSecondary"
-            gutterBottom
-            sx={{ fontSize: "0.875rem" }}
-          >
-            by {sellerName}
-          </Typography>
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-            mb={1}
-          >
-            <Typography
-              variant="h6"
-              color="textPrimary"
-              sx={{ fontSize: "1rem" }}
-            >
-              {price}
-            </Typography>
-            <Box display="flex" alignItems="center" gap={0.5}>
-              <FontAwesomeIcon icon={faStar} style={{ color: "#FFD700" }} />
-              <Typography
-                variant="body2"
-                color="textSecondary"
-                sx={{ fontSize: "0.875rem" }}
-              >
-                {rating}
-              </Typography>
-            </Box>
-          </Box>
-          <MuiButton
-            variant="outlined"
-            fullWidth
-            size="small"
-            sx={{
-              borderRadius: "8px",
-              textTransform: 'none',
-              "&:hover": {
-                backgroundColor: "primary.light",
-                borderColor: "primary.light",
-              },
-            }}
-            color="primary"
-          >
-            Add to Cart
-          </MuiButton>
+        <div className="p-3 rounded-b-lg">
+          <h3 className="font-semibold">{product.productName}</h3>
+          <p className="text-sm text-secondary mb-2">by {product.sellerName}</p>
+          <div className="flex justify-between items-center mb-2">
+            <span className="text-base text-primary">{product.price}</span>
+            <div className="flex items-center gap-1">
+              <FontAwesomeIcon icon={faStar} className="text-yellow-400" />
+              <span className="text-sm text-secondary">{product.rating}</span>
+            </div>
+          </div>
+          <AddToCartButton
+            itemId={product.id}
+            initialIsAddedToCart={product.isAddedToCart}
+            onClick={(e) => e.stopPropagation()} // Prevent triggering handleCardClick
+          />
           {children}
-        </CardContent>
+        </div>
       </div>
-    </Card>
+    </div>
   );
 }

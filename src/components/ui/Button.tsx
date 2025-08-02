@@ -1,20 +1,36 @@
 import React from "react";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "outline" | "link";
+  variant?: "outline" | "link" | "outline-filled" | "filled";
+  grow?: boolean;
+  disabled?: boolean;
 }
 
 // Button component
-export function Button({ children, variant, className, ...props }: ButtonProps) {
+export function Button({ children, variant, className, grow, disabled, ...props }: ButtonProps) {
+  const baseClass = "cursor-pointer";
+
+  const growClass = grow ? "hover:scale-105 transition-transform" : "";
+
+  const disabledClass = disabled ? "opacity-50 cursor-not-allowed" : "";
+
   const variantClass =
     variant === "outline"
-      ? "border-2 border-gray-300 bg-transparent rounded-lg px-3 py-2 text-gray-600 hover:bg-gray-100"
+      ? "border border-orange-300 bg-transparent rounded-lg text-gray-600 hover:bg-orange-50"
       : variant === "link"
       ? "text-blue-600 rounded-lg hover:underline"
-      : "rounded-lg hover:bg-gray-100";
+      : variant === "filled"
+      ? "border border-orange-300 bg-orange-400/80 text-white rounded-lg hover:bg-orange-400"
+      : variant === "outline-filled"
+      ? "w-full py-2 rounded-lg border border-orange-300/50 bg-orange-50 text-orange-400 text-sm font-bold hover:bg-orange-100"
+      : "rounded-lg hover:bg-orange-50";
 
   return (
-    <button className={`${variantClass} ${className}`} {...props}>
+    <button
+      className={`${baseClass} ${variantClass} ${growClass} ${disabledClass} ${className}`}
+      disabled={disabled}
+      {...props}
+    >
       {children}
     </button>
   );

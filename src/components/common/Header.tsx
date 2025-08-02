@@ -9,7 +9,7 @@ import Link from 'next/link';
 
 export default function Header() {
   return (
-    <header className="bg-white border-b-2 border-gray-300 p-4">
+    <header className="bg-white border-b-2 border-orange-300/50 p-4">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Logo */}
         <div className="flex items-center">
@@ -32,10 +32,11 @@ export default function Header() {
             className="flex-1"
           />
           <Button
-            variant="outline"
-            className="h-10"
+            variant="filled"
+            className="h-10 px-3 py-1"
+            grow={true}
           >
-            <FontAwesomeIcon icon={faFilter} className="h-4 w-4 mr-2" />
+            <FontAwesomeIcon icon={faFilter}  className="h-4 w-4 mr-2" />
             Filters
           </Button>
         </div>
@@ -43,15 +44,17 @@ export default function Header() {
         {/* Account and Cart Buttons */}
         <div className="flex items-center gap-3">
           <Button
-            variant="outline"
-            className="h-10"
+            variant="filled"
+            className="h-10 px-3 py-1"
+            grow={true}
           >
             <FontAwesomeIcon icon={faUser} className="h-4 w-4 mr-2" />
             My Account
           </Button>
           <Button
-            variant="outline"
-            className="h-10"
+            variant="filled"
+            className="h-10 px-3 py-1"
+            grow={true}
           >
             <FontAwesomeIcon icon={faShoppingCart} className="h-4 w-4 mr-2" />
             Cart

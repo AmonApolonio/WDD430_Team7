@@ -1,1 +1,0 @@
-// CustomerReviews component

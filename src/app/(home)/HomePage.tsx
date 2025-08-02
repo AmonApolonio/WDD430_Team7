@@ -1,4 +1,3 @@
-import { ProductCard } from "@/components/ui/ProductCard";
 import { fetchCategoriesData, fetchItemsGridData } from "@/lib/api";
 import { ShoppingItem } from "@/types/shopping";
 import FeaturedSellerItems from "@/components/product/FeaturedSellerItems";
@@ -14,7 +13,7 @@ export default function HomePage() {
         <img
           src="/images/hero.jpg"
           alt="Hero Banner"
-          className="w-full h-64 object-cover rounded-lg border-2 border-gray-400"
+          className="w-full h-64 object-cover rounded-lg border-2 border-orange-300/50"
         />
       </section>
 
@@ -28,7 +27,7 @@ export default function HomePage() {
           {categories.map((category) => (
             <div
               key={category}
-              className="h-32 bg-gray-200 border-2 border-gray-400 border-dashed rounded-lg flex items-center justify-center transition-transform transform hover:scale-105 hover:bg-gray-300"
+              className="h-32 bg-orange-50 border-2 border-orange-300/50 border-dashed rounded-lg flex items-center justify-center transition-transform transform hover:scale-105 hover:bg-orange-300"
             >
               <span className="font-semibold text-gray-600">{category}</span>
             </div>

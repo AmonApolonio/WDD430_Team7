@@ -17,7 +17,7 @@ export function SearchBar({
     <div className={`relative ${className}`}>
       <Input
         placeholder={placeholder || "Search..."}
-        className="px-3 h-10 border-2 border-gray-300 w-full rounded-lg text-gray-600"
+        className="px-3 h-10 border-2 border-orange-300/50 w-full rounded-lg text-gray-600 "
         onKeyDown={(e) => {
           if (e.key === "Enter") {
             const value = (e.target as HTMLInputElement).value;
@@ -31,7 +31,7 @@ export function SearchBar({
       />
       <FontAwesomeIcon
         icon={faSearch}
-        className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400"
+        className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-orange-400"
       />
     </div>
   );

@@ -14,15 +14,10 @@ const FeaturedSellerItems: React.FC<FeaturedSellerItemsProps> = ({ items }) => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {items.length > 0 ? (
-          items.map((item: ShoppingItem, index: number) => (
+          items.map((item: ShoppingItem) => (
             <ProductCard
-              key={index}
-              imageAlt={item.imageAlt}
-              imageUrl={item.imageUrl}
-              productName={item.productName}
-              sellerName={item.sellerName}
-              price={item.price}
-              rating={item.rating}
+              key={item.id}
+              product={item}
             />
           ))
         ) : (

@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Layout from '@/components/common/Layout';
 import { ProductCard } from '@/components/ui/ProductCard';
-import { fetchLargeItemsGridData } from '@/lib/api';
+import { fetchSearchItemsData } from '@/lib/api';
 import Pagination from '@mui/material/Pagination';
 import { useSearchParams } from "next/navigation";
 
@@ -14,7 +14,7 @@ const SearchResults = () => {
   const pageSize = 9;
 
   // Fetch data based on query and pagination
-  const { items: products, totalCount } = fetchLargeItemsGridData(query, pageIndex - 1, pageSize);
+  const { items: products, totalCount } = fetchSearchItemsData(query, pageIndex - 1, pageSize);
 
   const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setPageIndex(value);
@@ -23,7 +23,7 @@ const SearchResults = () => {
   return (
     <Layout>
       <main className="max-w-7xl mx-auto">
-        <div className="mb-6">
+        <div className="mb-6 w-full">
           <h2 className="text-2xl font-bold text-gray-800 mb-2">
             Search Results for "{query}"
           </h2>
@@ -35,15 +35,10 @@ const SearchResults = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {products.map((product, index) => (
+          {products.map((product) => (
             <ProductCard
-              key={index}
-              imageAlt={product.imageAlt}
-              imageUrl={product.imageUrl}
-              productName={product.productName}
-              sellerName={product.sellerName}
-              price={product.price}
-              rating={product.rating}
+              key={product.id}
+              product={product}
             />
           ))}
         </div>
