@@ -10,7 +10,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 export function Button({ children, variant, className, grow, disabled, ...props }: ButtonProps) {
   const baseClass = "cursor-pointer";
 
-  const growClass = grow ? "hover:scale-105 transition-transform" : "";
+  const growClass = !disabled && grow ? "hover:scale-105 transition-transform" : "";
 
   const disabledClass = disabled ? "opacity-50 cursor-not-allowed" : "";
 
@@ -20,7 +20,7 @@ export function Button({ children, variant, className, grow, disabled, ...props 
       : variant === "link"
       ? "text-blue-600 rounded-lg hover:underline"
       : variant === "filled"
-      ? "border border-orange-300 bg-orange-400/80 text-white rounded-lg hover:bg-orange-400"
+      ? "border border-orange-300 bg-orange-400/70 text-white rounded-lg hover:bg-orange-400/90"
       : variant === "outline-filled"
       ? "w-full py-2 rounded-lg border border-orange-300/50 bg-orange-50 text-orange-400 text-sm font-bold hover:bg-orange-100"
       : "rounded-lg hover:bg-orange-50";

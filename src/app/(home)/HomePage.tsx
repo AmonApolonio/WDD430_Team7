@@ -27,7 +27,7 @@ export default function HomePage() {
           {categories.map((category) => (
             <div
               key={category}
-              className="h-32 bg-orange-50 border-2 border-orange-300/50 border-dashed rounded-lg flex items-center justify-center transition-transform transform hover:scale-105 hover:bg-orange-300"
+              className="h-32 bg-orange-50 border-2 border-orange-300/50 border-dashed rounded-lg flex items-center justify-center transition-transform transform hover:scale-105 hover:bg-orange-300 cursor-pointer"
             >
               <span className="font-semibold text-gray-600">{category}</span>
             </div>

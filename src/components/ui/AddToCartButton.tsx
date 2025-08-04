@@ -5,6 +5,7 @@ import { faShoppingCart, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { Button } from "./Button";
 import { handleAddToCart, handleRemoveFromCart } from "@/lib/api";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 interface AddToCartButtonProps {
   itemId: string;
@@ -20,6 +21,9 @@ export const AddToCartButton: React.FC<AddToCartButtonProps> = ({ itemId, initia
     const response = await handleAddToCart(itemId);
     if (response?.status === 200) {
       setIsAddedToCart(true);
+      toast.success("Item added to cart!");
+    } else {
+      toast.error("Failed to add item to cart.");
     }
   };
 
@@ -28,6 +32,9 @@ export const AddToCartButton: React.FC<AddToCartButtonProps> = ({ itemId, initia
     const response = await handleRemoveFromCart(itemId);
     if (response?.status === 200) {
       setIsAddedToCart(false);
+      toast.success("Item removed from cart!");
+    } else {
+      toast.error("Failed to remove item from cart.");
     }
   };
 

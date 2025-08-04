@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
+import { TextArea } from '@/components/ui/TextArea';
 import { submitCustomerReview } from '@/lib/api';
 
 const WriteReview = ({ productId }: { productId: string }) => {
@@ -65,10 +66,10 @@ const WriteReview = ({ productId }: { productId: string }) => {
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">Your Review</label>
-          <textarea
+          <TextArea
             placeholder="Tell others about your experience with this product..."
             rows={4}
-            className="border-2 border-orange-300/50 w-full rounded-lg p-2"
+            className="w-full rounded-lg p-2 border-2 border-orange-300/50"
             value={reviewText}
             onChange={(e) => setReviewText(e.target.value)}
           />
