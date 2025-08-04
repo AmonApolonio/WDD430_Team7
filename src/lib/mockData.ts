@@ -1,5 +1,7 @@
 import { ItemDetails, ShoppingItem } from "@/types/shopping";
 import { CustomerReviewsResponse } from "@/types/customer";
+import { CartItem } from "@/types/cart";
+
 
 export const mockShoppingItemsData: ShoppingItem[] = [
   {
@@ -8,7 +10,7 @@ export const mockShoppingItemsData: ShoppingItem[] = [
     imageUrl: "/images/item-mock/item1.webp",
     productName: "Handwoven Scarf",
     sellerName: "ArtisanName",
-    price: "$45.00",
+    price: 45.00,
     rating: 4.8,
     isAddedToCart: false,
   },
@@ -18,7 +20,7 @@ export const mockShoppingItemsData: ShoppingItem[] = [
     imageUrl: "/images/item-mock/item2.webp",
     productName: "Ceramic Mug Set",
     sellerName: "PotteryMaster",
-    price: "$32.00",
+    price: 32.00,
     rating: 4.9,
     isAddedToCart: false,
   },
@@ -28,7 +30,7 @@ export const mockShoppingItemsData: ShoppingItem[] = [
     imageUrl: "/images/item-mock/item3.webp",
     productName: "Wooden Jewelry Box",
     sellerName: "WoodCrafter",
-    price: "$78.00",
+    price: 78.00,
     rating: 4.7,
     isAddedToCart: true,
   },
@@ -38,7 +40,7 @@ export const mockShoppingItemsData: ShoppingItem[] = [
     imageUrl: "/images/item-mock/item4.webp",
     productName: "Knitted Blanket",
     sellerName: "YarnArtist",
-    price: "$95.00",
+    price: 95.00,
     rating: 5.0,
     isAddedToCart: false,
   },
@@ -48,7 +50,7 @@ export const mockShoppingItemsData: ShoppingItem[] = [
     imageUrl: "/images/item-mock/item5.webp",
     productName: "Handmade Ceramic Vase",
     sellerName: "ClayArtisan",
-    price: "$50.00",
+    price: 50.00,
     rating: 4.6,
     isAddedToCart: false,
   },
@@ -58,7 +60,7 @@ export const mockShoppingItemsData: ShoppingItem[] = [
     imageUrl: "/images/item-mock/item11.webp",
     productName: "Woven Basket",
     sellerName: "BasketWeaver",
-    price: "$40.00",
+    price: 40.00,
     rating: 4.4,
     isAddedToCart: false,
   },
@@ -68,7 +70,7 @@ export const mockShoppingItemsData: ShoppingItem[] = [
     imageUrl: "/images/item-mock/item12.webp",
     productName: "Handcrafted Wooden Bowl",
     sellerName: "WoodArtisan",
-    price: "$60.00",
+    price: 60.00,
     rating: 4.9,
     isAddedToCart: false,
   },
@@ -78,7 +80,7 @@ export const mockShoppingItemsData: ShoppingItem[] = [
     imageUrl: "/images/item-mock/item8.webp",
     productName: "Embroidered Cushion Cover",
     sellerName: "TextileArtist",
-    price: "$25.00",
+    price: 25.00,
     rating: 4.7,
     isAddedToCart: false,
   },
@@ -88,7 +90,7 @@ export const mockShoppingItemsData: ShoppingItem[] = [
     imageUrl: "/images/item-mock/item9.webp",
     productName: "Handmade Leather Wallet",
     sellerName: "LeatherCraftsman",
-    price: "$55.00",
+    price: 55.00,
     rating: 4.8,
     isAddedToCart: false,
   },
@@ -98,7 +100,7 @@ export const mockShoppingItemsData: ShoppingItem[] = [
     imageUrl: "/images/item-mock/item10.webp",
     productName: "Ceramic Plant Pot",
     sellerName: "PotteryStudio",
-    price: "$35.00",
+    price: 35.00,
     rating: 4.5,
     isAddedToCart: false,
   },
@@ -179,3 +181,45 @@ export const mockCustomerReviewsData: CustomerReviewsResponse = {
     },
   ],
 }
+
+export const mockCartItems: CartItem[] = [
+  {
+    shoppingItem: {
+      id: "1",
+      imageAlt: "Handwoven Scarf",
+      imageUrl: "/images/item-mock/item1.webp",
+      productName: "Handwoven Scarf",
+      sellerName: "ArtisanName",
+      price: 45.00,
+      rating: 4.8,
+      isAddedToCart: true,
+    },
+    quantity: 1,
+  },
+  {
+    shoppingItem: {
+      id: "2",
+      imageAlt: "Ceramic Mug Set",
+      imageUrl: "/images/item-mock/item2.webp",
+      productName: "Ceramic Mug Set",
+      sellerName: "PotteryMaster",
+      price: 32.00,
+      rating: 4.9,
+      isAddedToCart: true,
+    },
+    quantity: 2,
+  },
+  {
+    shoppingItem: {
+      id: "3",
+      imageAlt: "Wooden Jewelry Box",
+      imageUrl: "/images/item-mock/item3.webp",
+      productName: "Wooden Jewelry Box",
+      sellerName: "WoodCrafter",
+      price: 78.00,
+      rating: 4.7,
+      isAddedToCart: true,
+    },
+    quantity: 1,
+  },
+];

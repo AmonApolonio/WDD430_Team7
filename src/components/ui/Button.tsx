@@ -18,7 +18,7 @@ export function Button({ children, variant, className, grow, disabled, ...props 
     variant === "outline"
       ? "border border-orange-300 bg-transparent rounded-lg text-gray-600 hover:bg-orange-50"
       : variant === "link"
-      ? "text-blue-600 rounded-lg hover:underline"
+      ? "text-orange-400 rounded-lg hover:underline"
       : variant === "filled"
       ? "border border-orange-300 bg-orange-400/70 text-white rounded-lg hover:bg-orange-400/90"
       : variant === "outline-filled"

@@ -51,14 +51,16 @@ export default function Header() {
             <FontAwesomeIcon icon={faUser} className="h-4 w-4 mr-2" />
             My Account
           </Button>
-          <Button
-            variant="filled"
-            className="h-10 px-3 py-1"
-            grow={true}
-          >
-            <FontAwesomeIcon icon={faShoppingCart} className="h-4 w-4 mr-2" />
-            Cart
-          </Button>
+          <Link href="/cart">
+            <Button
+              variant="filled"
+              className="h-10 px-3 py-1"
+              grow={true}
+            >
+              <FontAwesomeIcon icon={faShoppingCart} className="h-4 w-4 mr-2" />
+              Cart
+            </Button>
+          </Link>
         </div>
       </div>
     </header>

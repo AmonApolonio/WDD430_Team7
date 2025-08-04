@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/Button';
 import { AddToCartButton } from "@/components/ui/AddToCartButton";
 import StarRating from '@/components/ui/StarRating';
 import ProfilePicture from '@/components/ui/ProfilePicture';
+import { formatCurrency } from '@/lib/utils';
 
 // Item Page (dynamic route for individual product items)
 const ItemPage = () => {
@@ -63,7 +64,7 @@ const ItemPage = () => {
             </div>
 
             <div className="flex items-center gap-4">
-              <span className="text-3xl font-bold text-gray-800">${itemDetails.price.toFixed(2)}</span>
+              <span className="text-3xl font-bold text-gray-800">{formatCurrency(itemDetails.price)}</span>
             </div>
 
             <div>

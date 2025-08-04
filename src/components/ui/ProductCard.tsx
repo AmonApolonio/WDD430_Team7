@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ShoppingItem } from "@/types/shopping";
 import { AddToCartButton } from "@/components/ui/AddToCartButton";
+import { formatCurrency } from "@/lib/utils";
 
 export function ProductCard({
   product,
@@ -47,7 +48,7 @@ export function ProductCard({
           <h3 className="font-semibold">{product.productName}</h3>
           <p className="text-sm text-secondary mb-2">by {product.sellerName}</p>
           <div className="flex justify-between items-center mb-2">
-            <span className="text-base text-primary">{product.price}</span>
+            <span className="text-base text-primary">{formatCurrency(product.price)}</span>
             <div className="flex items-center gap-1">
               <FontAwesomeIcon icon={faStar} className="text-yellow-400" />
               <span className="text-sm text-secondary">{product.rating}</span>

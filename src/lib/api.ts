@@ -1,8 +1,9 @@
 // API utility functions
 
 // Import mock data
-import { mockShoppingItemsData, mockCategoriesData, mockItemDetailsData, mockCustomerReviewsData } from "./mockData";
+import { mockShoppingItemsData, mockCategoriesData, mockItemDetailsData, mockCustomerReviewsData, mockCartItems } from "./mockData";
 import { ItemDetails } from "@/types/shopping";
+import { CartItem, ShippingAndTaxValues } from "@/types/cart";
 import { CustomerReviewsResponse } from "@/types/customer";
 
 // Function to fetch small items grid data
@@ -90,6 +91,42 @@ export async function submitCustomerReview({ productId, rating, title, text }: {
     return response;
   } catch (error) {
     console.error("Failed to submit review:", error);
+    throw error;
+  }
+}
+
+// Function to fetch cart items
+export function fetchCartItems(): CartItem[] {
+  return mockCartItems;
+}
+
+// Function to fetch shipping and tax values
+export async function fetchShippingAndTax(): Promise<ShippingAndTaxValues> {
+  try {
+    const response = await new Promise<ShippingAndTaxValues>((resolve) => {
+      setTimeout(() => {
+        resolve({ shippingCost: 8.99, taxAmount: 15.36 });
+      }, 500);
+    });
+    return response;
+  } catch (error) {
+    console.error("Failed to fetch shipping and tax values:", error);
+    throw error;
+  }
+}
+
+// Function to handle a checkout API call
+export async function handleCheckout(): Promise<{ status: number; message: string; }> {
+  try {
+    const response = await new Promise<{ status: number; message: string; }>((resolve) => {
+      setTimeout(() => {
+        resolve({ status: 200, message: "Checkout completed successfully" });
+      }, 1000);
+    });
+    console.log(response);
+    return response;
+  } catch (error) {
+    console.error("Checkout failed:", error);
     throw error;
   }
 }

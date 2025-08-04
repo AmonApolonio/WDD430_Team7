@@ -4,7 +4,7 @@ export interface ShoppingItem {
   imageUrl: string;
   productName: string;
   sellerName: string;
-  price: string;
+  price: number;
   rating: number;
   isAddedToCart: boolean;
 }
