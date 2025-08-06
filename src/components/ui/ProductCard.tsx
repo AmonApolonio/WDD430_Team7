@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import Image from "next/image";
 import { ShoppingItem } from "@/types/shopping";
 import { AddToCartButton } from "@/components/ui/AddToCartButton";
 import { formatCurrency } from "@/lib/utils";
@@ -38,11 +39,15 @@ export function ProductCard({
       onClick={handleCardClick}
     >
       <div>
-        <img
+        <Image
           src={imgSrc}
           alt={product.imageAlt || "placeholder"}
           onError={handleImageError}
+          width={320}
+          height={160}
           className="w-full h-40 object-cover rounded-t-lg"
+          style={{ width: '100%', height: '160px', objectFit: 'cover' }}
+          priority
         />
         <div className="p-3 rounded-b-lg">
           <h3 className="font-semibold">{product.productName}</h3>

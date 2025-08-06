@@ -5,7 +5,7 @@ import { mockShoppingItemsData, mockCategoriesData, mockItemDetailsData, mockCus
 import { ItemDetails } from "@/types/shopping";
 import { CartItem, ShippingAndTaxValues } from "@/types/cart";
 import { CustomerReviewsResponse } from "@/types/customer";
-import { QuickStatsData, PersonalInfoData, BusinessInfoData, AccountStatsData, InventoryData } from "@/types/seller";
+import { QuickStatsData, PersonalInfoData, BusinessInfoData, InventoryData } from "@/types/seller";
 
 // Function to fetch small items grid data
 export function fetchItemsGridData(pageIndex = 0, pageSize = 4) {
@@ -40,6 +40,7 @@ export function fetchCategoriesData() {
 
 // Function to fetch item details by id
 export function fetchItemDetailsById(id: string): ItemDetails | undefined {
+  console.log("Fetching item details for id:", id);
   return mockItemDetailsData;
 }
 
@@ -77,11 +78,13 @@ export async function handleRemoveFromCart(itemId: string): Promise<{ status: nu
 
 // Function to fetch customer reviews data
 export function fetchCustomerReviews(productId: string): CustomerReviewsResponse {
+  console.log("Fetching customer reviews for product:", productId);
   return mockCustomerReviewsData;
 }
 
 // Function to submit a customer review
 export async function submitCustomerReview({ productId, rating, title, text }: { productId: string; rating: number; title: string; text: string; }): Promise<{ status: number; message: string; }> {
+  console.log("Submitting review:", { productId, rating, title, text });
   try {
     const response = await new Promise<{ status: number; message: string; }>((resolve) => {
       setTimeout(() => {

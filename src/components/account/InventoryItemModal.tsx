@@ -60,10 +60,10 @@ const InventoryItemModal: React.FC<InventoryItemModalProps> = ({ open, mode, ite
   }, []);
 
   useEffect(() => {
-    if ((isView || isEdit) && itemId) {
+    if ((mode === 'view' || mode === 'edit') && itemId) {
       const data = fetchInventoryItemById(itemId);
       if (data) setItem(data);
-    } else if (isAdd) {
+    } else if (mode === 'add') {
       setItem({ ...emptyItem, id: Date.now().toString() });
     }
   }, [mode, itemId, open]);
@@ -78,10 +78,7 @@ const InventoryItemModal: React.FC<InventoryItemModalProps> = ({ open, mode, ite
     }
   };
 
-  const handleSelectChange = (e: React.ChangeEvent<{ name?: string; value: unknown }>) => {
-    const name = e.target.name as string;
-    setItem({ ...item, [name]: e.target.value as string });
-  };
+
 
   const handleSave = () => {
     setLoading(true);

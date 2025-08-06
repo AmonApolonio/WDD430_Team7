@@ -1,29 +1,48 @@
 "use client";
 
-import Layout from "@/components/common/Layout";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { useState } from "react";
 // Font Awesome imports
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faEye } from "@fortawesome/free-solid-svg-icons";
+import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { mockAuth, mockSignUp, User } from "../../lib/auth";
 
 // Temporary Checkbox, Card placeholders (if not implemented)
-const Checkbox = ({ className, ...props }: any) => (
-  <input 
-    type="checkbox" 
+import { ReactNode, ButtonHTMLAttributes, InputHTMLAttributes, HTMLAttributes } from "react";
+
+type CheckboxProps = InputHTMLAttributes<HTMLInputElement> & { className?: string };
+const Checkbox = ({ className, ...props }: CheckboxProps) => (
+  <input
+    type="checkbox"
     className={`h-4 w-4 text-orange-400 focus:ring-orange-400 border-gray-300 rounded ${className || ''}`}
-    {...props} 
+    {...props}
   />
 );
-const Card = ({ children, ...props }: any) => <div {...props}>{children}</div>;
-const CardContent = ({ children, ...props }: any) => <div {...props}>{children}</div>;
+
+type CardProps = HTMLAttributes<HTMLDivElement> & { children: ReactNode };
+const Card = ({ children, ...props }: CardProps) => <div {...props}>{children}</div>;
+
+type CardContentProps = HTMLAttributes<HTMLDivElement> & { children: ReactNode };
+const CardContent = ({ children, ...props }: CardContentProps) => <div {...props}>{children}</div>;
 
 // Tabs implementation using React state
-function Tabs({ defaultValue, children, className }: any) {
+import { createContext, useContext, Dispatch, SetStateAction } from "react";
+
+type TabsContextType = {
+  activeTab: string;
+  setActiveTab: Dispatch<SetStateAction<string>>;
+};
+
+const TabsContext = createContext<TabsContextType | null>(null);
+
+type TabsProps = {
+  defaultValue: string;
+  children: ReactNode;
+  className?: string;
+};
+function Tabs({ defaultValue, children, className }: TabsProps) {
   const [activeTab, setActiveTab] = useState(defaultValue);
-  // Provide context to children
   return (
     <TabsContext.Provider value={{ activeTab, setActiveTab }}>
       <div className={className}>{children}</div>
@@ -31,15 +50,23 @@ function Tabs({ defaultValue, children, className }: any) {
   );
 }
 
-import { createContext, useContext } from "react";
-const TabsContext = createContext<any>(null);
-
-function TabsList({ children, className }: any) {
+type TabsListProps = {
+  children: ReactNode;
+  className?: string;
+};
+function TabsList({ children, className }: TabsListProps) {
   return <div className={className}>{children}</div>;
 }
 
-function TabsTrigger({ value, children, className, ...props }: any) {
-  const { activeTab, setActiveTab } = useContext(TabsContext);
+type TabsTriggerProps = ButtonHTMLAttributes<HTMLButtonElement> & {
+  value: string;
+  children: ReactNode;
+  className?: string;
+};
+function TabsTrigger({ value, children, className, ...props }: TabsTriggerProps) {
+  const context = useContext(TabsContext);
+  if (!context) throw new Error("TabsTrigger must be used within a Tabs");
+  const { activeTab, setActiveTab } = context;
   const isActive = activeTab === value;
   return (
     <button
@@ -50,7 +77,6 @@ function TabsTrigger({ value, children, className, ...props }: any) {
           ? "bg-white text-gray-900 shadow-sm"
           : "text-gray-600 hover:text-gray-900")
       }
-      aria-selected={isActive}
       onClick={() => setActiveTab(value)}
       {...props}
     >
@@ -59,20 +85,28 @@ function TabsTrigger({ value, children, className, ...props }: any) {
   );
 }
 
-function TabsContent({ value, children }: any) {
-  const { activeTab } = useContext(TabsContext);
+type TabsContentProps = {
+  value: string;
+  children: ReactNode;
+};
+function TabsContent({ value, children }: TabsContentProps) {
+  const context = useContext(TabsContext);
+  if (!context) throw new Error("TabsContent must be used within a Tabs");
+  const { activeTab } = context;
   if (activeTab !== value) return null;
   return <div>{children}</div>;
 }
+
 
 export default function AccountPage() {
   const [accountType, setAccountType] = useState<'buyer' | 'seller'>('buyer');
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleLogin = (event: React.FormEvent) => {
+  const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const email = (event.target as any).email.value;
-    const password = (event.target as any).password.value;
+    const form = event.currentTarget;
+    const email = (form.elements.namedItem('email') as HTMLInputElement)?.value;
+    const password = (form.elements.namedItem('password') as HTMLInputElement)?.value;
 
     if (mockAuth(email, password)) {
       alert("Login successful!");
@@ -81,11 +115,12 @@ export default function AccountPage() {
     }
   };
 
-  const handleSignUp = (event: React.FormEvent) => {
+  const handleSignUp = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const email = (event.target as any).email.value;
-    const password = (event.target as any).password.value;
-    const fullName = (event.target as any).fullName.value;
+    const form = event.currentTarget;
+    const email = (form.elements.namedItem('email') as HTMLInputElement)?.value;
+    const password = (form.elements.namedItem('password') as HTMLInputElement)?.value;
+    const fullName = (form.elements.namedItem('fullName') as HTMLInputElement)?.value;
 
     const newUser: User = {
       email,

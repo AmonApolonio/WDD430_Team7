@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css'; 
 import 'slick-carousel/slick/slick-theme.css';
+import Image from 'next/image';
 
 interface ProductImagesProps {
   images: string[];
@@ -40,7 +41,15 @@ const ProductImages: React.FC<ProductImagesProps> = ({ images, name }) => {
   return (
     <div className="space-y-4">
       <div className="aspect-square bg-orange-50 border-2 border-orange-300/50 border-dashed rounded-lg flex items-center justify-center">
-        <img src={selectedImage} alt={name} className="rounded-lg object-contain w-full" />
+        <Image
+          src={selectedImage}
+          alt={name}
+          width={500}
+          height={500}
+          className="rounded-lg object-contain w-full"
+          style={{ width: '100%', height: 'auto' }}
+          priority
+        />
       </div>
       <Slider {...settings}>
         {images.map((image, index) => (
@@ -49,10 +58,13 @@ const ProductImages: React.FC<ProductImagesProps> = ({ images, name }) => {
             className="cursor-pointer px-1"
             onClick={() => setSelectedImage(image)}
             >
-            <img 
-              src={image} 
-              alt={`${name} ${index + 1}`} 
-              className={`rounded object-cover h-32 w-full ${selectedImage === image ? 'border-2 border-orange-400 rounded' : ''}`} 
+            <Image
+              src={image}
+              alt={`${name} ${index + 1}`}
+              width={128}
+              height={128}
+              className={`rounded object-cover h-32 w-full ${selectedImage === image ? 'border-2 border-orange-400 rounded' : ''}`}
+              style={{ width: '100%', height: 'auto' }}
             />
             </div>
         ))}

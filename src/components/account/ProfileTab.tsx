@@ -11,14 +11,12 @@ interface ProfileTabProps {
 }
 
 const ProfileTab: React.FC<ProfileTabProps> = ({ personalInfo }) => {
-  const [businessInfo, setBusinessInfo] = useState<BusinessInfoData | null>(null);
   const [personalInfoState, setPersonalInfoState] = useState<PersonalInfoData | null>(personalInfo);
   const [businessInfoState, setBusinessInfoState] = useState<BusinessInfoData | null>(null);
   const [isPersonalInfoChanged, setIsPersonalInfoChanged] = useState(false);
   const [isBusinessInfoChanged, setIsBusinessInfoChanged] = useState(false);
 
   useEffect(() => {
-    setBusinessInfo(fetchBusinessInfoData());
     setBusinessInfoState(fetchBusinessInfoData());
   }, []);
 

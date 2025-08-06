@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 
 interface ProfilePictureProps {
   imageUrl?: string;
@@ -18,7 +19,14 @@ const ProfilePicture: React.FC<ProfilePictureProps> = ({
       className={`${size} bg-gray-300 rounded-full border-2 ${borderColor} flex items-center justify-center overflow-hidden`}
     >
       {imageUrl ? (
-        <img src={imageUrl} alt={fallbackText} className="w-full h-full object-cover" />
+        <Image
+          src={imageUrl}
+          alt={fallbackText}
+          width={48}
+          height={48}
+          className="w-full h-full object-cover"
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        />
       ) : (
         <span className="text-xs">{fallbackText}</span>
       )}

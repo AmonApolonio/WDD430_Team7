@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faEye, faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import Pagination from '@mui/material/Pagination';
@@ -166,7 +167,15 @@ const InventoryTab: React.FC = () => {
               >
                 <div className="col-span-4 flex items-center gap-3">
                   <div className="w-12 h-12 bg-orange-50 border border-orange-300 rounded flex items-center justify-center overflow-hidden">
-                    <img src={item.images[0]} alt={item.name} className="object-cover w-full h-full" />
+                    <Image
+                      src={item.images[0]}
+                      alt={item.name}
+                      width={48}
+                      height={48}
+                      className="object-cover w-full h-full"
+                      style={{ width: '100%', height: '100%' }}
+                      unoptimized={item.images[0].startsWith('data:')}
+                    />
                   </div>
                   <div>
                     <h4 className="font-medium text-gray-800">{item.name}</h4>

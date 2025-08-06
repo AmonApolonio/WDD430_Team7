@@ -7,8 +7,6 @@ import WriteReview from '@/components/customer/WriteReview';
 
 const CustomerReviews = ({ productId }: { productId: string }) => {
   const [reviewsData, setReviewsData] = useState<CustomerReviewsResponse | null>(null);
-  const [selectedRating, setSelectedRating] = useState(0);
-  const [hoverRating, setHoverRating] = useState(0);
 
   useEffect(() => {
     const data = fetchCustomerReviews(productId);

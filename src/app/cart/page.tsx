@@ -10,6 +10,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
+import Image from 'next/image';
 
 const formatCurrency = (value: number) => {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
@@ -53,6 +54,7 @@ export default function CartPage() {
       }
     } catch (error) {
       toast.error('An error occurred during checkout.');
+      console.error('Checkout error:', error);
     }
   };
 
@@ -68,6 +70,7 @@ export default function CartPage() {
       }
     } catch (error) {
       toast.error("An error occurred while removing the item.");
+      console.error("Remove item error:", error);
     }
   };
 
@@ -128,8 +131,15 @@ export default function CartPage() {
                   </Button>
                   <div className="flex gap-4">
                     {/* Product Image */}
-                    <div className="w-24 h-24 bg-gray-200 border-2 border-orange-300/50 border-dashed rounded flex items-center justify-center flex-shrink-0">
-                      <img src={item.shoppingItem.imageUrl} alt={item.shoppingItem.imageAlt} className="w-full h-full object-cover rounded" />
+                    <div className="w-24 h-24 bg-gray-200 border-2 border-orange-300/50 border-dashed rounded flex items-center justify-center flex-shrink-0 overflow-hidden">
+                      <Image
+                        src={item.shoppingItem.imageUrl}
+                        alt={item.shoppingItem.imageAlt}
+                        width={96}
+                        height={96}
+                        className="w-full h-full object-cover rounded"
+                        unoptimized={item.shoppingItem.imageUrl.startsWith('http')}
+                      />
                     </div>
 
                     {/* Product Details */}

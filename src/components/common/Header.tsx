@@ -6,6 +6,7 @@ import { faFilter, faUser, faShoppingCart } from '@fortawesome/free-solid-svg-ic
 import { Button } from '../ui/Button';
 import { SearchBar } from '../ui/SearchBar';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Header() {
   return (
@@ -14,10 +15,13 @@ export default function Header() {
         {/* Logo */}
         <div className="flex items-center">
           <Link href="/" className="flex items-center">
-            <img
+            <Image
               src="/images/icon.png"
               alt="Handcrafted Haven Logo"
+              width={48}
+              height={48}
               className="w-12 h-12 rounded"
+              priority
             />
             <div className="ml-1">
               <h1 className="text-xl font-bold text-gray-800">Handcrafted Haven</h1>

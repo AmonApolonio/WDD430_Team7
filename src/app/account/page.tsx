@@ -3,11 +3,10 @@
 import React, { useEffect, useState } from 'react';
 import Layout from '@/components/common/Layout';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faBox, faPen, faPlus, faEye, faTrashAlt, faEdit } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faBox, faPen} from '@fortawesome/free-solid-svg-icons';
 import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
-import { fetchQuickStatsData, fetchPersonalInfoData, fetchBusinessInfoData, fetchInventoryData } from "@/lib/api";
-import { QuickStatsData, PersonalInfoData, BusinessInfoData, AccountStatsData, InventoryData } from "@/types/seller";
+import { fetchQuickStatsData, fetchPersonalInfoData } from "@/lib/api";
+import { QuickStatsData, PersonalInfoData } from "@/types/seller";
 import ProfilePicture from '@/components/ui/ProfilePicture';
 import ProfileTab from '@/components/account/ProfileTab';
 import InventoryTab from '@/components/account/InventoryTab';

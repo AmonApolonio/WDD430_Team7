@@ -1,6 +1,8 @@
+
 import { fetchCategoriesData, fetchItemsGridData } from "@/lib/api";
 import { ShoppingItem } from "@/types/shopping";
 import FeaturedSellerItems from "@/components/product/FeaturedSellerItems";
+import Image from "next/image";
 
 export default function HomePage() {
   const { items }: { items: ShoppingItem[] } = fetchItemsGridData() || { items: [] };
@@ -10,10 +12,13 @@ export default function HomePage() {
     <div className="bg-white">
       {/* Hero Section */}
       <section className="mb-8">
-        <img
+        <Image
           src="/images/hero.jpg"
           alt="Hero Banner"
+          width={1920}
+          height={256}
           className="w-full h-64 object-cover rounded-lg border-2 border-orange-300/50"
+          priority
         />
       </section>
 
