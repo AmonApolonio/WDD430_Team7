@@ -43,7 +43,7 @@ export default function Header() {
 
         {/* Account and Cart Buttons */}
         <div className="flex items-center gap-3">
-          <Link href="/account/inventory">
+          <Link href="/account">
             <Button
               variant="filled"
               className="h-10 px-3 py-1"
