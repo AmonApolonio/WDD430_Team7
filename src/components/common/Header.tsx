@@ -36,21 +36,23 @@ export default function Header() {
             className="h-10 px-3 py-1"
             grow={true}
           >
-            <FontAwesomeIcon icon={faFilter}  className="h-4 w-4 mr-2" />
+            <FontAwesomeIcon icon={faFilter} className="h-4 w-4 mr-2" />
             Filters
           </Button>
         </div>
 
         {/* Account and Cart Buttons */}
         <div className="flex items-center gap-3">
-          <Button
-            variant="filled"
-            className="h-10 px-3 py-1"
-            grow={true}
-          >
-            <FontAwesomeIcon icon={faUser} className="h-4 w-4 mr-2" />
-            My Account
-          </Button>
+          <Link href="/account/inventory">
+            <Button
+              variant="filled"
+              className="h-10 px-3 py-1"
+              grow={true}
+            >
+              <FontAwesomeIcon icon={faUser} className="h-4 w-4 mr-2" />
+              My Account
+            </Button>
+          </Link>
           <Link href="/cart">
             <Button
               variant="filled"

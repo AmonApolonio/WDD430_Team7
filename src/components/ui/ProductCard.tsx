@@ -57,7 +57,7 @@ export function ProductCard({
           <AddToCartButton
             itemId={product.id}
             initialIsAddedToCart={product.isAddedToCart}
-            onClick={(e) => e.stopPropagation()} // Prevent triggering handleCardClick
+            onClick={(e) => e.stopPropagation()}
           />
           {children}
         </div>

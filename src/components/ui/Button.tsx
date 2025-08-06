@@ -23,7 +23,7 @@ export function Button({ children, variant, className, grow, disabled, ...props 
       ? "border border-orange-300 bg-orange-400/70 text-white rounded-lg hover:bg-orange-400/90"
       : variant === "outline-filled"
       ? "w-full py-2 rounded-lg border border-orange-300/50 bg-orange-50 text-orange-400 text-sm font-bold hover:bg-orange-100"
-      : "rounded-lg hover:bg-orange-50";
+      : "";
 
   return (
     <button
