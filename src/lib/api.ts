@@ -2,7 +2,7 @@
 
 // Import mock data
 import { mockShoppingItemsData, mockCategoriesData, mockItemDetailsData, mockCustomerReviewsData, mockCartItems, mockQuickStatsData, mockPersonalInfoData, mockBusinessInfoData, mockInventoryData, mockStatusOptionsData } from "./mockData";
-import { ItemDetails } from "@/types/shopping";
+import { ItemDetails, PaginatedData, SearchFilters, ShoppingItem } from "@/types/shopping";
 import { CartItem, ShippingAndTaxValues } from "@/types/cart";
 import { CustomerReviewsResponse } from "@/types/customer";
 import { QuickStatsData, PersonalInfoData, BusinessInfoData, InventoryData } from "@/types/seller";
@@ -21,10 +21,22 @@ export function fetchItemsGridData(pageIndex = 0, pageSize = 4) {
 }
 
 // Function to fetch large items grid data
-export function fetchSearchItemsData(query: string, pageIndex = 0, pageSize = 10) {
+export function fetchSearchItemsData(query: string, pageIndex = 0, pageSize = 10): PaginatedData<ShoppingItem> {
   const start = pageIndex * pageSize;
   const end = start + pageSize;
   const paginatedData = mockShoppingItemsData.slice(start, end);
+
+  // Also apply the filters in the search
+  if (typeof window !== 'undefined') {
+    const filters = sessionStorage.getItem('filters');
+    if (filters) {
+      try {
+        const parsed: SearchFilters = JSON.parse(filters);
+        console.log('Filters from sessionStorage:', parsed);
+      } catch {}
+    }
+  }
+
   return {
     items: paginatedData,
     totalCount: mockShoppingItemsData.length,
@@ -34,7 +46,7 @@ export function fetchSearchItemsData(query: string, pageIndex = 0, pageSize = 10
 }
 
 // Function to fetch categories data
-export function fetchCategoriesData() {
+export function fetchCategoriesData(): string[] {
   return mockCategoriesData;
 }
 

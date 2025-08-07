@@ -9,10 +9,12 @@ import { Button } from '../ui/Button';
 import { SearchBar } from '../ui/SearchBar';
 import Link from 'next/link';
 import Image from 'next/image';
+import { FiltersDialog } from './FiltersDialog';
 
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [filtersOpen, setFiltersOpen] = useState(false);
   return (
     <header className="bg-white border-b-2 border-orange-300/50 p-4">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
@@ -54,6 +56,7 @@ export default function Header() {
             variant="filled"
             className="h-10 px-3 py-1"
             grow={true}
+            onClick={() => setFiltersOpen(true)}
           >
             <FontAwesomeIcon icon={faFilter} className="h-4 w-4 mr-2" />
             Filters
@@ -115,7 +118,7 @@ export default function Header() {
             variant="filled"
             className="h-10 px-3 py-1 w-full"
             grow={true}
-            onClick={() => setMobileMenuOpen(false)}
+            onClick={() => { setFiltersOpen(true); setMobileMenuOpen(false); }}
           >
             <FontAwesomeIcon icon={faFilter} className="h-4 w-4 mr-2" />
             Filters
@@ -142,6 +145,8 @@ export default function Header() {
           </Link>
         </div>
       </div>
+      {/* Filters Dialog (modal) */}
+      <FiltersDialog open={filtersOpen} onClose={() => setFiltersOpen(false)} />
 
     </header>
   );

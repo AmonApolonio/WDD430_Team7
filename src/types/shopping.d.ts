@@ -1,3 +1,16 @@
+export interface PaginatedData<T> {
+  items: T[];
+  totalCount: number;
+  pageSize: number;
+  pageIndex: number;
+}
+
+interface SearchFilters {
+  priceRange: [number, number];
+  selectedCategories: string[];
+  selectedRatings: number[];
+}
+
 export interface ShoppingItem {
   id: string;
   imageAlt: string;
