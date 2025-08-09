@@ -1,12 +1,22 @@
 
+import React, { Suspense } from "react";
 import { fetchCategoriesData, fetchItemsGridData } from "@/lib/api";
 import { ShoppingItem } from "@/types/shopping";
 import FeaturedSellerItems from "@/components/product/FeaturedSellerItems";
 import Image from "next/image";
+import { HomePageSkeleton } from "@/components/ui/Skeletons";
 
 export default function HomePage() {
-  const { items }: { items: ShoppingItem[] } = fetchItemsGridData() || { items: [] };
-  const categories = fetchCategoriesData();
+  return (
+    <Suspense fallback={<HomePageSkeleton />}>
+      <HomePageContent />
+    </Suspense>
+  );
+}
+
+async function HomePageContent() {
+  const { items }: { items: ShoppingItem[] } = (await fetchItemsGridData()) || { items: [] };
+  const categories = await fetchCategoriesData();
 
   return (
     <div className="bg-white">

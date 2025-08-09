@@ -6,20 +6,14 @@ import { fetchCategoriesData } from '@/lib/api';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import { SearchFilters } from '@/types/shopping';
+import { CategoriesSkeleton } from '@/components/ui/Skeletons';
 
 interface FiltersDialogProps {
   open: boolean;
   onClose: () => void;
 }
 
-const categories = [
-  { label: 'Kitchen & Dining' },
-  { label: 'Home Decor' },
-  { label: 'Art & Collectibles' },
-  { label: 'Jewelry' },
-  { label: 'Clothing' },
-  { label: 'Toys & Games' },
-];
+
 
 const ratings = [
   { stars: 5, },
@@ -30,16 +24,46 @@ const ratings = [
 ];
 
 
+
 export const FiltersDialog: React.FC<FiltersDialogProps> = ({ open, onClose }) => {
   const PRICE_MIN = 20;
   const PRICE_MAX = 200;
   const [priceRange, setPriceRange] = useState<[number, number]>([PRICE_MIN, PRICE_MAX]);
-  const [categories, setCategories] = useState<string[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedRatings, setSelectedRatings] = useState<number[]>([]);
+  const [categories, setCategories] = useState<string[] | null>(null);
+  const [categoriesLoading, setCategoriesLoading] = useState(true);
 
   useEffect(() => {
-    setCategories(fetchCategoriesData());
+    let mounted = true;
+    
+    const loadCategories = async () => {
+      try {
+        setCategoriesLoading(true);
+        const data = await fetchCategoriesData();
+        if (mounted) {
+          setCategories(data);
+        }
+      } catch (error) {
+        console.error('Failed to load categories:', error);
+        if (mounted) {
+          setCategories([]);
+        }
+      } finally {
+        if (mounted) {
+          setCategoriesLoading(false);
+        }
+      }
+    };
+
+    loadCategories();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
     const saved = sessionStorage.getItem('filters');
     if (saved) {
       try {
@@ -59,6 +83,41 @@ export const FiltersDialog: React.FC<FiltersDialogProps> = ({ open, onClose }) =
     };
     sessionStorage.setItem('filters', JSON.stringify(filters));
   }, [priceRange, selectedCategories, selectedRatings]);
+
+  const renderCategories = () => {
+    if (categoriesLoading) {
+      return <CategoriesSkeleton />;
+    }
+
+    if (!categories || categories.length === 0) {
+      return null;
+    }
+
+    return (
+      <div className="mb-4">
+        <h3 className="text-sm font-medium mb-1 text-gray-700">Category</h3>
+        <div className="flex flex-col gap-1">
+          {categories.map((cat) => (
+            <label key={cat} className="flex items-center gap-2 cursor-pointer text-sm">
+              <input
+                type="checkbox"
+                className="accent-orange-400 w-4 h-4 rounded border-gray-200"
+                checked={selectedCategories.includes(cat)}
+                onChange={e => {
+                  setSelectedCategories(prev =>
+                    e.target.checked
+                      ? [...prev, cat]
+                      : prev.filter(c => c !== cat)
+                  );
+                }}
+              />
+              <span className="flex-1 text-gray-700">{cat}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+    );
+  };
 
   if (!open) return null;
   return (
@@ -81,34 +140,13 @@ export const FiltersDialog: React.FC<FiltersDialogProps> = ({ open, onClose }) =
           onClick={onClose}
         >
           <FontAwesomeIcon icon={faXmark} className="h-4 w-4 text-gray-500" />
-        </button>
+        </button> 
         <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 text-gray-800">
           <FontAwesomeIcon icon={faFilter} className="h-4 w-4 text-orange-400" />
           Filters
         </h2>
         {/* Category */}
-        <div className="mb-4">
-          <h3 className="text-sm font-medium mb-1 text-gray-700">Category</h3>
-          <div className="flex flex-col gap-1">
-            {categories.map((cat) => (
-              <label key={cat} className="flex items-center gap-2 cursor-pointer text-sm">
-                <input
-                  type="checkbox"
-                  className="accent-orange-400 w-4 h-4 rounded border-gray-200"
-                  checked={selectedCategories.includes(cat)}
-                  onChange={e => {
-                    setSelectedCategories(prev =>
-                      e.target.checked
-                        ? [...prev, cat]
-                        : prev.filter(c => c !== cat)
-                    );
-                  }}
-                />
-                <span className="flex-1 text-gray-700">{cat}</span>
-              </label>
-            ))}
-          </div>
-        </div>
+        {renderCategories()}
         {/* Price Range */}
         <div className="mb-4">
           <h3 className="text-sm font-medium mb-1 text-gray-700">Price Range</h3>

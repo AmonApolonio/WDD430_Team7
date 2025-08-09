@@ -1,13 +1,125 @@
+
 import React, { useEffect, useState } from 'react';
 import { Input } from '@/components/ui/Input';
 import { TextArea } from '@/components/ui/TextArea';
 import { Button } from '@/components/ui/Button';
 import { PersonalInfoData, BusinessInfoData } from '@/types/seller';
-import {  fetchBusinessInfoData, updatePersonalInfoData, updateBusinessInfoData } from '@/lib/api';
+import { fetchBusinessInfoData, updatePersonalInfoData, updateBusinessInfoData } from '@/lib/api';
 
 
 interface ProfileTabProps {
   personalInfo: PersonalInfoData | null;
+}
+
+
+function BusinessInfoSection({
+  businessInfoState,
+  isBusinessInfoChanged,
+  handleSaveBusinessInfo,
+  handleBusinessInfoChange,
+}: {
+  businessInfoState: BusinessInfoData | null;
+  setBusinessInfoState: React.Dispatch<React.SetStateAction<BusinessInfoData | null>>;
+  isBusinessInfoChanged: boolean;
+  setIsBusinessInfoChanged: React.Dispatch<React.SetStateAction<boolean>>;
+  handleSaveBusinessInfo: () => void;
+  handleBusinessInfoChange: (field: keyof BusinessInfoData, value: string) => void;
+}) {
+  if (!businessInfoState) return null;
+  return (
+    <div className="border-2 border-orange-300/50 border-dashed p-6 w-full lg:w-full lg:min-w-[450px] relative h-auto">
+      <h3 className="text-lg font-semibold text-gray-800 mb-4">Business Information</h3>
+      <div className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Business Name</label>
+          <Input
+            value={businessInfoState.businessName}
+            className="border-2 border-orange-300/50 rounded px-3 py-2 w-full"
+            onChange={e => handleBusinessInfoChange('businessName', e.target.value)}
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Business Email</label>
+          <Input
+            value={businessInfoState.businessEmail}
+            className="border-2 border-orange-300/50 rounded px-3 py-2 w-full"
+            onChange={e => handleBusinessInfoChange('businessEmail', e.target.value)}
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Business Phone</label>
+          <Input
+            value={businessInfoState.businessPhone}
+            className="border-2 border-orange-300/50 rounded px-3 py-2 w-full"
+            onChange={e => handleBusinessInfoChange('businessPhone', e.target.value)}
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Business Address</label>
+          <TextArea
+            value={businessInfoState.businessAddress}
+            className="border-2 border-orange-300/50 rounded px-3 py-2 w-full"
+            onChange={e => handleBusinessInfoChange('businessAddress', e.target.value)}
+          />
+        </div>
+      </div>
+      {isBusinessInfoChanged && (
+        <Button variant="filled" className="absolute top-4 right-4 px-4 py-2 text-sm" onClick={handleSaveBusinessInfo}>
+          Save changes
+        </Button>
+      )}
+    </div>
+  );
+}
+
+function BusinessInfoLoader({
+  businessInfoState,
+  setBusinessInfoState,
+  isBusinessInfoChanged,
+  setIsBusinessInfoChanged,
+  handleSaveBusinessInfo,
+  handleBusinessInfoChange,
+}: {
+  businessInfoState: BusinessInfoData | null;
+  setBusinessInfoState: React.Dispatch<React.SetStateAction<BusinessInfoData | null>>;
+  isBusinessInfoChanged: boolean;
+  setIsBusinessInfoChanged: React.Dispatch<React.SetStateAction<boolean>>;
+  handleSaveBusinessInfo: () => void;
+  handleBusinessInfoChange: (field: keyof BusinessInfoData, value: string) => void;
+}) {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const loadBusinessInfo = async () => {
+      try {
+        const data = await fetchBusinessInfoData();
+        setBusinessInfoState(data);
+      } catch (error) {
+        console.error('Error loading business info:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadBusinessInfo();
+  }, [setBusinessInfoState]);
+
+  if (isLoading) {
+    return <div className="border-2 border-orange-300/50 border-dashed p-6 w-full lg:w-full lg:min-w-[450px] relative h-auto flex items-center justify-center">
+      <div className="text-gray-600">Loading business info...</div>
+    </div>;
+  }
+
+  return (
+    <BusinessInfoSection
+      businessInfoState={businessInfoState}
+      setBusinessInfoState={setBusinessInfoState}
+      isBusinessInfoChanged={isBusinessInfoChanged}
+      setIsBusinessInfoChanged={setIsBusinessInfoChanged}
+      handleSaveBusinessInfo={handleSaveBusinessInfo}
+      handleBusinessInfoChange={handleBusinessInfoChange}
+    />
+  );
 }
 
 const ProfileTab: React.FC<ProfileTabProps> = ({ personalInfo }) => {
@@ -17,13 +129,8 @@ const ProfileTab: React.FC<ProfileTabProps> = ({ personalInfo }) => {
   const [isBusinessInfoChanged, setIsBusinessInfoChanged] = useState(false);
 
   useEffect(() => {
-    setBusinessInfoState(fetchBusinessInfoData());
-  }, []);
-
-  useEffect(() => {
     setPersonalInfoState(personalInfo);
   }, [personalInfo]);
-
 
   // Handle input changes for personal info
   const handlePersonalInfoChange = (field: keyof PersonalInfoData, value: string) => {
@@ -97,50 +204,14 @@ const ProfileTab: React.FC<ProfileTabProps> = ({ personalInfo }) => {
         )}
 
         {/* Business Information */}
-        {businessInfoState && (
-          <div className="border-2 border-orange-300/50 border-dashed p-6 w-full lg:w-full lg:min-w-[450px] relative h-auto">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">Business Information</h3>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Business Name</label>
-                <Input
-                  value={businessInfoState.businessName}
-                  className="border-2 border-orange-300/50 rounded px-3 py-2 w-full"
-                  onChange={e => handleBusinessInfoChange('businessName', e.target.value)}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Business Email</label>
-                <Input
-                  value={businessInfoState.businessEmail}
-                  className="border-2 border-orange-300/50 rounded px-3 py-2 w-full"
-                  onChange={e => handleBusinessInfoChange('businessEmail', e.target.value)}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Business Phone</label>
-                <Input
-                  value={businessInfoState.businessPhone}
-                  className="border-2 border-orange-300/50 rounded px-3 py-2 w-full"
-                  onChange={e => handleBusinessInfoChange('businessPhone', e.target.value)}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Business Address</label>
-                <TextArea
-                  value={businessInfoState.businessAddress}
-                  className="border-2 border-orange-300/50 rounded px-3 py-2 w-full"
-                  onChange={e => handleBusinessInfoChange('businessAddress', e.target.value)}
-                />
-              </div>
-            </div>
-            {isBusinessInfoChanged && (
-              <Button variant="filled" className="absolute top-4 right-4 px-4 py-2 text-sm" onClick={handleSaveBusinessInfo}>
-                Save changes
-              </Button>
-            )}
-          </div>
-        )}
+        <BusinessInfoLoader
+          businessInfoState={businessInfoState}
+          setBusinessInfoState={setBusinessInfoState}
+          isBusinessInfoChanged={isBusinessInfoChanged}
+          setIsBusinessInfoChanged={setIsBusinessInfoChanged}
+          handleSaveBusinessInfo={handleSaveBusinessInfo}
+          handleBusinessInfoChange={handleBusinessInfoChange}
+        />
       </div>
     </div>
   );

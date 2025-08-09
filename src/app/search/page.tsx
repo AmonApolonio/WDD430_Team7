@@ -1,68 +1,44 @@
-"use client";
 
-import React, { useState, Suspense } from 'react';
+import React, { Suspense } from 'react';
 import Layout from '@/components/common/Layout';
-import { ProductCard } from '@/components/ui/ProductCard';
 import { fetchSearchItemsData } from '@/lib/api';
-import Pagination from '@mui/material/Pagination';
-import { useSearchParams } from "next/navigation";
+import { SearchResultsSkeleton } from '@/components/ui/Skeletons';
+import SearchPageClient from '@/components/search/SearchPageClient';
 
-const SearchResults = () => {
+interface SearchPageProps {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}
+
+async function SearchResults({ query, pageIndex, pageSize }: { query: string; pageIndex: number; pageSize: number }) {
+  const { items: products, totalCount } = await fetchSearchItemsData(query, pageIndex - 1, pageSize);
+  
   return (
-    <Layout>
-      <Suspense fallback={<div className="max-w-7xl mx-auto p-6">Loading search results...</div>}>
-        <SearchResultsContent />
-      </Suspense>
-    </Layout>
+    <SearchPageClient 
+      query={query}
+      pageIndex={pageIndex}
+      pageSize={pageSize}
+      totalCount={totalCount}
+      products={products}
+    />
   );
-};
+}
 
-const SearchResultsContent = () => {
-  const searchParams = useSearchParams();
-  const query = searchParams.get("query") || "";
-  const [pageIndex, setPageIndex] = useState(1); // MUI Pagination is 1-based
+// Server Component using Suspense for data fetching
+export default async function SearchPage({ searchParams }: SearchPageProps) {
+  const params = await searchParams;
+  const query = typeof params?.query === 'string' ? params.query : '';
+  const pageIndex = Math.max(1, Number(params?.page) || 1);
   const pageSize = 9;
 
-  // Fetch data based on query and pagination
-  const { items: products, totalCount } = fetchSearchItemsData(query, pageIndex - 1, pageSize);
-
-  const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
-    setPageIndex(value);
-  };
+  const suspenseKey = `${query}-${pageIndex}`;
 
   return (
-    <main className="max-w-7xl mx-auto">
-      <div className="mb-6 w-full">
-        <h2 className="text-2xl font-bold text-gray-800 mb-2">
-          Search Results for &quot;{query}&quot;
-        </h2>
-        <div className="flex items-center justify-between">
-          <p className="text-gray-600">
-            Showing {products.length} of {totalCount} results
-          </p>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {products.map((product) => (
-          <ProductCard
-            key={product.id}
-            product={product}
-          />
-        ))}
-      </div>
-
-      <div className="mt-8">
-        <Pagination
-          count={Math.ceil(totalCount / pageSize)}
-          page={pageIndex}
-          onChange={handlePageChange}
-          color="primary"
-          className="flex justify-center mt-4"
-        />
-      </div>
-    </main>
+    <Layout>
+      <main className="max-w-7xl mx-auto p-6">
+        <Suspense key={suspenseKey} fallback={<SearchResultsSkeleton />}>
+          <SearchResults query={query} pageIndex={pageIndex} pageSize={pageSize} />
+        </Suspense>
+      </main>
+    </Layout>
   );
-};
-
-export default SearchResults;
+}

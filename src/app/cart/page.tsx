@@ -6,32 +6,65 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faMinus, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { fetchCartItems, fetchShippingAndTax, handleCheckout, handleRemoveFromCart } from "@/lib/api";
 import { CartItem } from "@/types/cart";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import Image from 'next/image';
+import { CartPageSkeleton } from '@/components/ui/Skeletons';
 
 const formatCurrency = (value: number) => {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
 };
 
-export default function CartPage() {
-  const router = useRouter();
-  const cartItems: CartItem[] = fetchCartItems();
-  const [quantities, setQuantities] = useState(cartItems.map(item => item.quantity));
+// Cart Content component that uses data fetching
+function CartContent() {
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [shippingAndTax, setShippingAndTax] = useState({ shippingCost: 0, taxAmount: 0 });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function fetchValues() {
-      setLoading(true);
-      const values = await fetchShippingAndTax();
-      setShippingAndTax(values);
-      setLoading(false);
-    }
-    fetchValues();
+    const loadCartData = async () => {
+      try {
+        const items = await fetchCartItems();
+        const shippingData = await fetchShippingAndTax();
+        setCartItems(items);
+        setShippingAndTax(shippingData);
+      } catch (error) {
+        console.error('Error loading cart data:', error);
+        toast.error('Failed to load cart data');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadCartData();
   }, []);
+
+  if (loading) {
+    return <CartPageSkeleton />;
+  }
+
+  return (
+    <CartPageComponent 
+      initialCartItems={cartItems} 
+      initialShippingAndTax={shippingAndTax}
+    />
+  );
+}
+
+// Client component for cart functionality
+function CartPageComponent({ 
+  initialCartItems, 
+  initialShippingAndTax 
+}: { 
+  initialCartItems: CartItem[];
+  initialShippingAndTax: { shippingCost: number; taxAmount: number };
+}) {
+  const router = useRouter();
+  const [cartItems] = useState<CartItem[]>(initialCartItems);
+  const [quantities, setQuantities] = useState<number[]>(initialCartItems.map(item => item.quantity));
+  const [shippingAndTax] = useState(initialShippingAndTax);
 
   const updateQuantity = (index: number, delta: number) => {
     setQuantities(prev => {
@@ -73,16 +106,6 @@ export default function CartPage() {
       console.error("Remove item error:", error);
     }
   };
-
-  if (loading) {
-    return (
-      <Layout>
-        <main className="max-w-7xl mx-auto p-6">
-          <p>Loading...</p>
-        </main>
-      </Layout>
-    );
-  }
 
   if (cartItems.length === 0) {
     return (
@@ -217,5 +240,14 @@ export default function CartPage() {
         </div>
       </main>
     </Layout>
+  );
+}
+
+// Main page component with Suspense wrapper
+export default function CartPage() {
+  return (
+    <Suspense fallback={<CartPageSkeleton />}>
+      <CartContent />
+    </Suspense>
   );
 }

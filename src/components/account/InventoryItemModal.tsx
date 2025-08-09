@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useState } from 'react';
 import { Modal, Box, Typography, TextField, Button, MenuItem } from '@mui/material';
 import { InventoryData } from '@/types/seller';
 import {
@@ -9,6 +9,28 @@ import {
   fetchCategoriesData,
   fetchStatusOptions
 } from '@/lib/api';
+
+function createResource<T>(promise: Promise<T>) {
+  let status = 'pending';
+  let result: T;
+  const suspender = promise.then(
+    (r) => {
+      status = 'success';
+      result = r;
+    },
+    (e) => {
+      status = 'error';
+      result = e;
+    }
+  );
+  return {
+    read() {
+      if (status === 'pending') throw suspender;
+      if (status === 'error') throw result;
+      return result!;
+    },
+  };
+}
 
 interface InventoryItemModalProps {
   open: boolean;
@@ -45,32 +67,44 @@ const emptyItem: InventoryData = {
   views: 0,
 };
 
-const InventoryItemModal: React.FC<InventoryItemModalProps> = ({ open, mode, itemId, onClose, onSuccess }) => {
+
+const categoriesResource = createResource(fetchCategoriesData());
+const statusOptionsResource = createResource(fetchStatusOptions());
+
+const InventoryItemModal: React.FC<InventoryItemModalProps> = (props) => {
+  return (
+    <Suspense fallback={<div className="p-8 text-center">Loading item...</div>}>
+      <InventoryItemModalContent {...props} />
+    </Suspense>
+  );
+};
+
+function InventoryItemModalContent({ open, mode, itemId, onClose, onSuccess }: InventoryItemModalProps) {
   const [item, setItem] = useState<InventoryData>(emptyItem);
   const [loading, setLoading] = useState(false);
-  const [categories, setCategories] = useState<string[]>([]);
-  const [statusOptions, setStatusOptions] = useState<string[]>([]);
   const isView = mode === 'view';
   const isEdit = mode === 'edit';
   const isAdd = mode === 'add';
 
-  useEffect(() => {
-    setCategories(fetchCategoriesData());
-    setStatusOptions(fetchStatusOptions());
-  }, []);
+  // Suspense data fetching
+  const categories = categoriesResource.read();
+  const statusOptions = statusOptionsResource.read();
+  let fetchedItem: InventoryData | undefined = undefined;
+  if ((mode === 'view' || mode === 'edit') && itemId) {
+    const itemResource = createResource(fetchInventoryItemById(itemId));
+    fetchedItem = itemResource.read();
+  }
 
-  useEffect(() => {
-    if ((mode === 'view' || mode === 'edit') && itemId) {
-      const data = fetchInventoryItemById(itemId);
-      if (data) setItem(data);
+  React.useEffect(() => {
+    if ((mode === 'view' || mode === 'edit') && itemId && fetchedItem) {
+      setItem(fetchedItem);
     } else if (mode === 'add') {
       setItem({ ...emptyItem, id: Date.now().toString() });
     }
-  }, [mode, itemId, open]);
+  }, [mode, itemId, open, fetchedItem]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    // Special handling for number fields
     if (["price", "stock", "views"].includes(name)) {
       setItem({ ...item, [name]: Number(value) });
     } else {
@@ -78,11 +112,8 @@ const InventoryItemModal: React.FC<InventoryItemModalProps> = ({ open, mode, ite
     }
   };
 
-
-
   const handleSave = () => {
     setLoading(true);
-    // Parse images field
     let imagesArr: string[] = [];
     if (Array.isArray(item.images)) {
       imagesArr = item.images;
@@ -228,7 +259,7 @@ const InventoryItemModal: React.FC<InventoryItemModalProps> = ({ open, mode, ite
             disabled={isView}
             required
           >
-            {statusOptions.map((status) => (
+            {statusOptions.map((status: string) => (
               <MenuItem key={status} value={status}>{status}</MenuItem>
             ))}
           </TextField>
@@ -249,7 +280,7 @@ const InventoryItemModal: React.FC<InventoryItemModalProps> = ({ open, mode, ite
             disabled={isView}
             required
           >
-            {categories.map((cat) => (
+            {categories.map((cat: string) => (
               <MenuItem key={cat} value={cat}>{cat}</MenuItem>
             ))}
           </TextField>
@@ -268,6 +299,6 @@ const InventoryItemModal: React.FC<InventoryItemModalProps> = ({ open, mode, ite
       </Box>
     </Modal>
   );
-};
+}
 
 export default InventoryItemModal;

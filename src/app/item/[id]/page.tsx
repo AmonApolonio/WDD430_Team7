@@ -1,42 +1,44 @@
-"use client";
 
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHeart, faShareAlt } from '@fortawesome/free-solid-svg-icons';
+import React, { Suspense } from 'react';
 import Layout from '@/components/common/Layout';
-import CustomerReviews from '@/components/customer/CustomerReviews';
 import ProductImages from '@/components/product/ProductImages';
 import { fetchItemDetailsById } from '@/lib/api';
-import { ItemDetails } from '@/types/shopping';
-import { Button } from '@/components/ui/Button';
 import { AddToCartButton } from "@/components/ui/AddToCartButton";
 import StarRating from '@/components/ui/StarRating';
 import ProfilePicture from '@/components/ui/ProfilePicture';
 import { formatCurrency } from '@/lib/utils';
+import CustomerReviewsContent from '@/components/customer/CustomerReviews';
+import { CustomerReviewsSkeleton, ItemPageSkeleton } from '@/components/ui/Skeletons';
+import ItemFavoriteShare from '@/components/ui/ItemFavoriteShare';
 
-// Item Page (dynamic route for individual product items)
-const ItemPage = () => {
-  const { id } = useParams();
-  const itemId = Array.isArray(id) ? id[0] : id;
-  const [itemDetails, setItemDetails] = useState<ItemDetails | null>(null);
-  const [isFavorite, setIsFavorite] = useState(false);
 
-  useEffect(() => {
-    if (itemId) {
-      const fetchedItem = fetchItemDetailsById(itemId);
-      if (fetchedItem) {
-        setItemDetails(fetchedItem);
-      }
-    }
-  }, [itemId]);
+interface ItemPageProps {
+  params: Promise<{ id: string }>;
+}
 
-  const handleFavoriteClick = () => {
-    setIsFavorite(!isFavorite);
-  };
 
+// Separate component for async data fetching
+const ItemContent = async ({ params }: ItemPageProps) => {
+  const resolvedParams = await params;
+  const itemId = Array.isArray(resolvedParams.id) ? resolvedParams.id[0] : resolvedParams.id;
+  if (!itemId) {
+    return (
+      <Layout>
+        <main className="max-w-7xl mx-auto p-6">
+          <div className="text-center text-red-600">Invalid item.</div>
+        </main>
+      </Layout>
+    );
+  }
+  const itemDetails = await fetchItemDetailsById(itemId);
   if (!itemDetails) {
-    return <div>Loading...</div>;
+    return (
+      <Layout>
+        <main className="max-w-7xl mx-auto p-6">
+          <div className="text-center text-red-600">Item not found.</div>
+        </main>
+      </Layout>
+    );
   }
 
   return (
@@ -99,19 +101,7 @@ const ItemPage = () => {
             <div className="bg-white border-2 border-orange-300/50 rounded-lg p-4">
               <div className="flex gap-3">
                 <AddToCartButton itemId={itemDetails.id} initialIsAddedToCart={itemDetails.isAddedToCart} />
-                <Button
-                  variant={isFavorite ? "filled" : "outline"}
-                  className="text-orange-400 px-2 py-1"
-                  onClick={handleFavoriteClick}
-                >
-                  <FontAwesomeIcon icon={faHeart} />
-                </Button>
-                <Button variant="outline" className="text-orange-400 px-2 py-1" onClick={() => {
-                  navigator.clipboard.writeText(window.location.href);
-                  alert('URL copied to clipboard!');
-                }}>
-                  <FontAwesomeIcon icon={faShareAlt} />
-                </Button>
+                <ItemFavoriteShare itemId={itemDetails.id} />
               </div>
             </div>
 
@@ -132,10 +122,19 @@ const ItemPage = () => {
             </div>
           </div>
         </div>
-
-        <CustomerReviews productId={itemDetails.id} />
+        <Suspense fallback={<CustomerReviewsSkeleton />}>
+          <CustomerReviewsContent productId={itemDetails.id} />
+        </Suspense>
       </main>
     </Layout>
+  );
+};
+
+const ItemPage = ({ params }: ItemPageProps) => {
+  return (
+    <Suspense fallback={<ItemPageSkeleton />}>
+      <ItemContent params={params} />
+    </Suspense>
   );
 };
 

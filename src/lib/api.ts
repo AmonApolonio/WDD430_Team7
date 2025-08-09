@@ -1,3 +1,11 @@
+
+// Shared delay time for all API mocks (ms)
+export const DELAY_TIME = 500;
+
+// artificial delay for suspense testing
+function delay(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 // API utility functions
 
 // Import mock data
@@ -8,7 +16,8 @@ import { CustomerReviewsResponse } from "@/types/customer";
 import { QuickStatsData, PersonalInfoData, BusinessInfoData, InventoryData } from "@/types/seller";
 
 // Function to fetch small items grid data
-export function fetchItemsGridData(pageIndex = 0, pageSize = 4) {
+export async function fetchItemsGridData(pageIndex = 0, pageSize = 4) {
+  await delay(DELAY_TIME);
   const start = pageIndex * pageSize;
   const end = start + pageSize;
   const paginatedData = mockShoppingItemsData.slice(start, end);
@@ -21,12 +30,13 @@ export function fetchItemsGridData(pageIndex = 0, pageSize = 4) {
 }
 
 // Function to fetch large items grid data
-export function fetchSearchItemsData(query: string, pageIndex = 0, pageSize = 10): PaginatedData<ShoppingItem> {
+export async function fetchSearchItemsData(query: string, pageIndex = 0, pageSize = 10): Promise<PaginatedData<ShoppingItem>> {
+  await delay(DELAY_TIME);
   const start = pageIndex * pageSize;
   const end = start + pageSize;
   const paginatedData = mockShoppingItemsData.slice(start, end);
 
-  // Also apply the filters in the search
+   // Also apply the filters in the search
   if (typeof window !== 'undefined') {
     const filters = sessionStorage.getItem('filters');
     if (filters) {
@@ -46,18 +56,22 @@ export function fetchSearchItemsData(query: string, pageIndex = 0, pageSize = 10
 }
 
 // Function to fetch categories data
-export function fetchCategoriesData(): string[] {
+export async function fetchCategoriesData(): Promise<string[]> {
+  await delay(DELAY_TIME);
   return mockCategoriesData;
 }
 
 // Function to fetch item details by id
-export function fetchItemDetailsById(id: string): ItemDetails | undefined {
+export async function fetchItemDetailsById(id: string): Promise<ItemDetails | undefined> {
+  await delay(DELAY_TIME);
   console.log("Fetching item details for id:", id);
+  
   return mockItemDetailsData;
 }
 
 // Function to handle add to cart action
 export async function handleAddToCart(itemId: string): Promise<{ status: number; message: string; itemId: string;}> {
+  await delay(DELAY_TIME);
   try {
     const response = await new Promise<{ status: number; message: string; itemId: string; }>((resolve) => {
       setTimeout(() => {
@@ -74,6 +88,7 @@ export async function handleAddToCart(itemId: string): Promise<{ status: number;
 
 // Function to handle remove from cart action
 export async function handleRemoveFromCart(itemId: string): Promise<{ status: number; message: string; itemId: string;}> {
+  await delay(DELAY_TIME);
   try {
     const response = await new Promise<{ status: number; message: string; itemId: string; }>((resolve) => {
       setTimeout(() => {
@@ -89,13 +104,15 @@ export async function handleRemoveFromCart(itemId: string): Promise<{ status: nu
 }
 
 // Function to fetch customer reviews data
-export function fetchCustomerReviews(productId: string): CustomerReviewsResponse {
+export async function fetchCustomerReviews(productId: string): Promise<CustomerReviewsResponse> {
+  await delay(DELAY_TIME);
   console.log("Fetching customer reviews for product:", productId);
   return mockCustomerReviewsData;
 }
 
 // Function to submit a customer review
 export async function submitCustomerReview({ productId, rating, title, text }: { productId: string; rating: number; title: string; text: string; }): Promise<{ status: number; message: string; }> {
+  await delay(DELAY_TIME);
   console.log("Submitting review:", { productId, rating, title, text });
   try {
     const response = await new Promise<{ status: number; message: string; }>((resolve) => {
@@ -112,12 +129,14 @@ export async function submitCustomerReview({ productId, rating, title, text }: {
 }
 
 // Function to fetch cart items
-export function fetchCartItems(): CartItem[] {
+export async function fetchCartItems(): Promise<CartItem[]> {
+  await delay(DELAY_TIME);
   return mockCartItems;
 }
 
 // Function to fetch shipping and tax values
 export async function fetchShippingAndTax(): Promise<ShippingAndTaxValues> {
+  await delay(DELAY_TIME);
   try {
     const response = await new Promise<ShippingAndTaxValues>((resolve) => {
       setTimeout(() => {
@@ -133,6 +152,7 @@ export async function fetchShippingAndTax(): Promise<ShippingAndTaxValues> {
 
 // Function to handle a checkout API call
 export async function handleCheckout(): Promise<{ status: number; message: string; }> {
+  await delay(DELAY_TIME);
   try {
     const response = await new Promise<{ status: number; message: string; }>((resolve) => {
       setTimeout(() => {
@@ -148,39 +168,45 @@ export async function handleCheckout(): Promise<{ status: number; message: strin
 }
 
 // Function to fetch Quick Stats data
-export function fetchQuickStatsData(): QuickStatsData {
+export async function fetchQuickStatsData(): Promise<QuickStatsData> {
+  await delay(DELAY_TIME);
   return mockQuickStatsData;
 }
 
 // Function to fetch Personal Info data
-export function fetchPersonalInfoData(): PersonalInfoData {
+export async function fetchPersonalInfoData(): Promise<PersonalInfoData> {
+  await delay(DELAY_TIME);
   return mockPersonalInfoData;
 }
 
 // Function to fetch Business Info data
-export function fetchBusinessInfoData(): BusinessInfoData {
+export async function fetchBusinessInfoData(): Promise<BusinessInfoData> {
+  await delay(DELAY_TIME);
   return mockBusinessInfoData;
 }
 
 // Update Personal Info data (mock, mutates in-memory object)
-export function updatePersonalInfoData(data: Partial<PersonalInfoData>): PersonalInfoData {
+export async function updatePersonalInfoData(data: Partial<PersonalInfoData>): Promise<PersonalInfoData> {
+  await delay(DELAY_TIME);
   Object.assign(mockPersonalInfoData, data);
   return mockPersonalInfoData;
 }
 
 // Update Business Info data (mock, mutates in-memory object)
-export function updateBusinessInfoData(data: Partial<BusinessInfoData>): BusinessInfoData {
+export async function updateBusinessInfoData(data: Partial<BusinessInfoData>): Promise<BusinessInfoData> {
+  await delay(DELAY_TIME);
   Object.assign(mockBusinessInfoData, data);
   return mockBusinessInfoData;
 }
 
 // Function to fetch Inventory data
-export function fetchInventoryData(query: string, pageIndex = 0, pageSize = 10, category?: string, status?: string): {
+export async function fetchInventoryData(query: string, pageIndex = 0, pageSize = 10, category?: string, status?: string): Promise<{
   items: InventoryData[];
   totalCount: number;
   pageSize: number;
   pageIndex: number;
-} {
+}> {
+  await delay(DELAY_TIME);
   // Filtering logic (mock)
   let filtered = mockInventoryData;
   if (query) {
@@ -204,12 +230,14 @@ export function fetchInventoryData(query: string, pageIndex = 0, pageSize = 10, 
 }
 
 // Fetch a single inventory item by id
-export function fetchInventoryItemById(id: string): InventoryData | undefined {
+export async function fetchInventoryItemById(id: string): Promise<InventoryData | undefined> {
+  await delay(DELAY_TIME);
   return mockInventoryData.find(item => item.id === id);
 }
 
 // Update an inventory item by id (mock, mutates in-memory array)
-export function updateInventoryItemById(id: string, data: Partial<InventoryData>): InventoryData | undefined {
+export async function updateInventoryItemById(id: string, data: Partial<InventoryData>): Promise<InventoryData | undefined> {
+  await delay(DELAY_TIME);
   const idx = mockInventoryData.findIndex(item => item.id === id);
   if (idx === -1) return undefined;
   mockInventoryData[idx] = { ...mockInventoryData[idx], ...data };
@@ -217,13 +245,15 @@ export function updateInventoryItemById(id: string, data: Partial<InventoryData>
 }
 
 // Add a new inventory item (mock, adds to in-memory array)
-export function addInventoryItem(data: InventoryData): InventoryData {
+export async function addInventoryItem(data: InventoryData): Promise<InventoryData> {
+  await delay(DELAY_TIME);
   mockInventoryData.push(data);
   return data;
 }
 
 // Delete an inventory item by id (mock, removes from in-memory array)
-export function deleteInventoryItem(id: string): boolean {
+export async function deleteInventoryItem(id: string): Promise<boolean> {
+  await delay(DELAY_TIME);
   const idx = mockInventoryData.findIndex(item => item.id === id);
   if (idx === -1) return false;
   mockInventoryData.splice(idx, 1);
@@ -231,6 +261,7 @@ export function deleteInventoryItem(id: string): boolean {
 }
 
 // Function to fetch status options (mocked)
-export function fetchStatusOptions(): string[] {
+export async function fetchStatusOptions(): Promise<string[]> {
+  await delay(5000);
   return mockStatusOptionsData;
 }

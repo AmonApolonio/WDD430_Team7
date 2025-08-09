@@ -1,22 +1,11 @@
-import { useEffect, useState } from 'react';
+import React from 'react';
 import { fetchCustomerReviews } from '@/lib/api';
-import { CustomerReviewsResponse } from '@/types/customer';
 import StarRating from '@/components/ui/StarRating';
 import ProfilePicture from '@/components/ui/ProfilePicture';
 import WriteReview from '@/components/customer/WriteReview';
 
-const CustomerReviews = ({ productId }: { productId: string }) => {
-  const [reviewsData, setReviewsData] = useState<CustomerReviewsResponse | null>(null);
-
-  useEffect(() => {
-    const data = fetchCustomerReviews(productId);
-    setReviewsData(data);
-  }, [productId]);
-
-  if (!reviewsData) {
-    return <div>Loading...</div>;
-  }
-
+const CustomerReviewsContent = async ({ productId }: { productId: string }) => {
+  const reviewsData = await fetchCustomerReviews(productId);
   return (
     <div className="bg-white border-2 border-orange-300/50 rounded-lg p-6">
       <div className="flex items-center justify-between mb-6">
@@ -80,4 +69,4 @@ const CustomerReviews = ({ productId }: { productId: string }) => {
   );
 };
 
-export default CustomerReviews;
+export default CustomerReviewsContent;
