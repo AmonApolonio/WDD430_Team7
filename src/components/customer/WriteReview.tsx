@@ -7,6 +7,9 @@ import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { TextArea } from '@/components/ui/TextArea';
 import { submitCustomerReview } from '@/lib/api';
+import { toast } from 'react-toastify';
+import { red } from '@mui/material/colors';
+import { redirect } from 'next/dist/server/api-utils';
 
 const WriteReview = ({ productId }: { productId: string }) => {
   const [selectedRating, setSelectedRating] = useState(0);
@@ -18,7 +21,7 @@ const WriteReview = ({ productId }: { productId: string }) => {
 
   const handleSubmit = async () => {
     if (!isFormValid) {
-      alert('Please fill in all fields before submitting your review.');
+      toast.error('Please fill in all fields before submitting your review.');
       return;
     }
 
@@ -29,10 +32,10 @@ const WriteReview = ({ productId }: { productId: string }) => {
         title: reviewTitle,
         text: reviewText,
       });
-      alert(response.message);
+      toast.success(response.message);
     } catch (error) {
       console.error('Failed to submit review:', error);
-      alert('Failed to submit review. Please try again.');
+      toast.error('Failed to submit review. Please try again.');
     }
   };
 

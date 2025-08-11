@@ -7,6 +7,7 @@ import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { mockAuth, mockSignUp, User } from "../../lib/auth";
+import { toast } from "react-toastify";
 
 // Temporary Checkbox, Card placeholders (if not implemented)
 import { ReactNode, ButtonHTMLAttributes, InputHTMLAttributes, HTMLAttributes } from "react";
@@ -109,9 +110,9 @@ export default function AccountPage() {
     const password = (form.elements.namedItem('password') as HTMLInputElement)?.value;
 
     if (mockAuth(email, password)) {
-      alert("Login successful!");
+      toast.success("Login successful!");
     } else {
-      alert("Invalid email or password.");
+      toast.error("Invalid email or password.");
     }
   };
 
@@ -130,9 +131,9 @@ export default function AccountPage() {
     };
 
     if (mockSignUp(newUser)) {
-      alert("Sign-up successful! You can now log in.");
+      toast.success("Sign-up successful! You can now log in.");
     } else {
-      alert("User already exists. Please log in.");
+      toast.error("User already exists. Please log in.");
     }
   };
 

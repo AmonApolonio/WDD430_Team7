@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Button } from ".";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart, faShareAlt } from '@fortawesome/free-solid-svg-icons';
+import { toast } from 'react-toastify';
 
 interface ItemFavoriteShareProps {
   itemId: string;
@@ -13,6 +14,11 @@ const ItemFavoriteShare: React.FC<ItemFavoriteShareProps> = () => {
 
   const handleFavoriteClick = () => {
     setIsFavorite((prev) => !prev);
+    if (isFavorite) {
+      toast.success("Item removed from favorites!");
+    } else {
+      toast.success("Item added to favorites!");
+    }
   };
 
   const handleShareClick = () => {
