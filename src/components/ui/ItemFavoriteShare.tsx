@@ -24,7 +24,7 @@ const ItemFavoriteShare: React.FC<ItemFavoriteShareProps> = () => {
   const handleShareClick = () => {
     if (typeof window !== "undefined") {
       navigator.clipboard.writeText(window.location.href);
-      alert("URL copied to clipboard!");
+      toast.info("URL copied to clipboard!");
     }
   };
 

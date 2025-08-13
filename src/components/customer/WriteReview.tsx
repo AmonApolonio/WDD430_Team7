@@ -8,16 +8,26 @@ import { Button } from '@/components/ui/Button';
 import { TextArea } from '@/components/ui/TextArea';
 import { submitCustomerReview } from '@/lib/api';
 import { toast } from 'react-toastify';
-import { red } from '@mui/material/colors';
-import { redirect } from 'next/dist/server/api-utils';
 
-const WriteReview = ({ productId }: { productId: string }) => {
+interface WriteReviewProps {
+  productId: string;
+  onReviewSubmitted?: () => void;
+}
+
+const WriteReview = ({ productId, onReviewSubmitted }: WriteReviewProps) => {
   const [selectedRating, setSelectedRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [reviewTitle, setReviewTitle] = useState('');
   const [reviewText, setReviewText] = useState('');
 
   const isFormValid = selectedRating > 0 && reviewTitle.trim() !== '' && reviewText.trim() !== '';
+
+  const clearForm = () => {
+    setSelectedRating(0);
+    setHoverRating(0);
+    setReviewTitle('');
+    setReviewText('');
+  };
 
   const handleSubmit = async () => {
     if (!isFormValid) {
@@ -33,6 +43,8 @@ const WriteReview = ({ productId }: { productId: string }) => {
         text: reviewText,
       });
       toast.success(response.message);
+      clearForm();
+      if (onReviewSubmitted) onReviewSubmitted();
     } catch (error) {
       console.error('Failed to submit review:', error);
       toast.error('Failed to submit review. Please try again.');
