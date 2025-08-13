@@ -7,8 +7,14 @@ import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { TextArea } from '@/components/ui/TextArea';
 import { submitCustomerReview } from '@/lib/api';
+import { toast } from 'react-toastify';
 
-const WriteReview = ({ productId }: { productId: string }) => {
+interface WriteReviewProps {
+  productId: string;
+  onReviewSubmitted?: () => void;
+}
+
+const WriteReview = ({ productId, onReviewSubmitted }: WriteReviewProps) => {
   const [selectedRating, setSelectedRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [reviewTitle, setReviewTitle] = useState('');
@@ -16,9 +22,16 @@ const WriteReview = ({ productId }: { productId: string }) => {
 
   const isFormValid = selectedRating > 0 && reviewTitle.trim() !== '' && reviewText.trim() !== '';
 
+  const clearForm = () => {
+    setSelectedRating(0);
+    setHoverRating(0);
+    setReviewTitle('');
+    setReviewText('');
+  };
+
   const handleSubmit = async () => {
     if (!isFormValid) {
-      alert('Please fill in all fields before submitting your review.');
+      toast.error('Please fill in all fields before submitting your review.');
       return;
     }
 
@@ -29,10 +42,12 @@ const WriteReview = ({ productId }: { productId: string }) => {
         title: reviewTitle,
         text: reviewText,
       });
-      alert(response.message);
+      toast.success(response.message);
+      clearForm();
+      if (onReviewSubmitted) onReviewSubmitted();
     } catch (error) {
       console.error('Failed to submit review:', error);
-      alert('Failed to submit review. Please try again.');
+      toast.error('Failed to submit review. Please try again.');
     }
   };
 

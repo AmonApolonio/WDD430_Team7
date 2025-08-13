@@ -1,11 +1,30 @@
-import React from 'react';
+
+"use client";
+import React, { useEffect, useState, useCallback } from 'react';
 import { fetchCustomerReviews } from '@/lib/api';
 import StarRating from '@/components/ui/StarRating';
 import ProfilePicture from '@/components/ui/ProfilePicture';
 import WriteReview from '@/components/customer/WriteReview';
+import { CustomerReview, CustomerReviewsResponse } from '@/types/customer';
 
-const CustomerReviewsContent = async ({ productId }: { productId: string }) => {
-  const reviewsData = await fetchCustomerReviews(productId);
+const CustomerReviewsContent = ({ productId }: { productId: string }) => {
+  const [reviewsData, setReviewsData] = useState<CustomerReviewsResponse | null>(null);
+  const [reloadFlag, setReloadFlag] = useState(0);
+
+  const loadReviews = useCallback(async () => {
+    const data = await fetchCustomerReviews(productId);
+    setReviewsData(data);
+  }, [productId]);
+
+  useEffect(() => {
+    loadReviews();
+  }, [loadReviews, reloadFlag]);
+
+  const handleReviewSubmitted = () => {
+    setReloadFlag((f) => f + 1);
+  };
+
+  if (!reviewsData) return <div>Loading reviews...</div>;
   return (
     <div className="bg-white border-2 border-orange-300/50 rounded-lg p-6">
       <div className="flex items-center justify-between mb-6">
@@ -40,7 +59,7 @@ const CustomerReviewsContent = async ({ productId }: { productId: string }) => {
       </div>
 
       <div className="space-y-6 mb-8">
-        {reviewsData.reviews.map((review) => (
+  {reviewsData.reviews.map((review: CustomerReview) => (
           <div key={review.id} className="border-b-2 border-gray-200 pb-6">
             <div className="flex items-start gap-4">
               <ProfilePicture 
@@ -63,7 +82,7 @@ const CustomerReviewsContent = async ({ productId }: { productId: string }) => {
         ))}
       </div>
 
-      <WriteReview productId={productId} />
+  <WriteReview productId={productId} onReviewSubmitted={handleReviewSubmitted} />
 
     </div>
   );

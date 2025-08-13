@@ -9,6 +9,7 @@ import { QuickStatsData, PersonalInfoData } from "@/types/seller";
 import ProfilePicture from '@/components/ui/ProfilePicture';
 import ProfileTab from '@/components/account/ProfileTab';
 import InventoryTab from '@/components/account/InventoryTab';
+import { toast } from 'react-toastify';
 
 // Client component for account functionality
 export default function AccountPageClient({ 
@@ -34,12 +35,12 @@ export default function AccountPageClient({
                 fallbackText={personalInfo?.fullName?.[0] || ''}
                 size="w-16 h-16"
               />
-              <Button
+                <Button
                 className="absolute top-0 right-0 px-1 bg-orange-300 text-white rounded-lg hover:bg-orange-400"
-                onClick={() => alert('Edit profile picture functionality triggered!')}
-              >
+                onClick={() => toast.info('Edit profile picture feature triggered! Not implemented yet.')}
+                >
                 <FontAwesomeIcon icon={faPen} className="text-white text-xs" />
-              </Button>
+                </Button>
             </div>
             <div>
               <h1 className="text-2xl font-bold text-gray-800">Welcome back, {personalInfo?.fullName}!</h1>

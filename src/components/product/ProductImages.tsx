@@ -42,33 +42,35 @@ const ProductImages: React.FC<ProductImagesProps> = ({ images, name }) => {
 
   return (
     <div className="space-y-4">
-      <div className="aspect-square bg-orange-50 border-2 border-orange-300/50 border-dashed rounded-lg flex items-center justify-center">
-        <Image
-          src={selectedImage}
-          alt={name}
-          width={500}
-          height={500}
-          className="rounded-lg object-contain w-full"
-          style={{ width: '100%', height: 'auto' }}
-          priority
-        />
+      <div className="aspect-square bg-orange-50 border-2 border-orange-300/50 border-dashed rounded-lg flex items-center justify-center overflow-hidden">
+        <div className="w-full h-full aspect-square relative">
+          <Image
+            src={selectedImage}
+            alt={name}
+            fill
+            className="rounded-lg object-cover w-full h-full"
+            style={{ objectFit: 'cover' }}
+            priority
+          />
+        </div>
       </div>
       <Slider {...settings}>
         {images.map((image, index) => (
-            <div
+          <div
             key={index}
             className="cursor-pointer px-1"
             onClick={() => setSelectedImage(image)}
-            >
-            <Image
-              src={image}
-              alt={`${name} ${index + 1}`}
-              width={128}
-              height={128}
-              className={`rounded object-cover h-32 w-full ${selectedImage === image ? 'border-2 border-orange-400 rounded' : ''}`}
-              style={{ width: '100%', height: 'auto' }}
-            />
+          >
+            <div className="aspect-square w-full h-32 relative overflow-hidden">
+              <Image
+                src={image}
+                alt={`${name} ${index + 1}`}
+                fill
+                className={`rounded object-cover w-full h-full ${selectedImage === image ? 'border-2 border-orange-400 rounded' : ''}`}
+                style={{ objectFit: 'cover' }}
+              />
             </div>
+          </div>
         ))}
       </Slider>
     </div>
