@@ -9,4 +9,9 @@ export interface ShippingAndTaxValues {
   shippingCost: number; 
   taxAmount: number
 }
+
+export interface OrderItem {
+  id: string,
+  orderList: CartItem[]
+}
   

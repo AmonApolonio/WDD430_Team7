@@ -1,6 +1,6 @@
 import { ItemDetails, ShoppingItem } from "@/types/shopping";
 import { CustomerReviewsResponse } from "@/types/customer";
-import { CartItem } from "@/types/cart";
+import { CartItem, OrderItem } from "@/types/cart";
 import { QuickStatsData, PersonalInfoData, BusinessInfoData, InventoryData } from "@/types/seller";
 
 
@@ -514,3 +514,68 @@ export const mockInventoryData: InventoryData[] = [
     views: 125,
   },
 ];
+
+export const mockOrderItems: OrderItem[] = [
+  {
+    id: "1",
+    orderList: [
+      {
+        shoppingItem: {
+        id: "4",
+        imageAlt: "Knitted Blanket",
+        imageUrl: "/images/item-mock/item4.webp",
+        productName: "Knitted Blanket",
+        sellerName: "YarnArtist",
+        price: 95.00,
+        rating: 5.0,
+        isAddedToCart: false,
+        },
+        quantity: 3,
+      },
+      {
+        shoppingItem: {
+          id: "5",
+          imageAlt: "Handmade Ceramic Vase",
+          imageUrl: "/images/item-mock/item5.webp",
+          productName: "Handmade Ceramic Vase",
+          sellerName: "ClayArtisan",
+          price: 50.00,
+          rating: 4.6,
+          isAddedToCart: false,
+        },
+        quantity: 2,
+      },
+    ],
+  },
+  {
+    id: "2",
+    orderList: [
+      {
+        shoppingItem: {
+          id: "6",
+          imageAlt: "Woven Basket",
+          imageUrl: "/images/item-mock/item11.webp",
+          productName: "Woven Basket",
+          sellerName: "BasketWeaver",
+          price: 40.00,
+          rating: 4.4,
+          isAddedToCart: false,
+        },
+        quantity: 2,
+      },
+      {
+        shoppingItem: {
+          id: "7",
+          imageAlt: "Handcrafted Wooden Bowl",
+          imageUrl: "/images/item-mock/item12.webp",
+          productName: "Handcrafted Wooden Bowl",
+          sellerName: "WoodArtisan",
+          price: 60.00,
+          rating: 4.9,
+          isAddedToCart: false,
+        },
+        quantity: 1,
+      },
+    ],
+  }
+]
