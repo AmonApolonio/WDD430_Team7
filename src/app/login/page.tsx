@@ -6,8 +6,8 @@ import { useState } from "react";
 // Font Awesome imports
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
-import { mockAuth, mockSignUp, User } from "../../lib/auth";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 // Temporary Checkbox, Card placeholders (if not implemented)
 import { ReactNode, ButtonHTMLAttributes, InputHTMLAttributes, HTMLAttributes } from "react";
@@ -102,38 +102,73 @@ function TabsContent({ value, children }: TabsContentProps) {
 export default function AccountPage() {
   const [accountType, setAccountType] = useState<'buyer' | 'seller'>('buyer');
   const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
 
-  const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget;
     const email = (form.elements.namedItem('email') as HTMLInputElement)?.value;
     const password = (form.elements.namedItem('password') as HTMLInputElement)?.value;
 
-    if (mockAuth(email, password)) {
-      toast.success("Login successful!");
-    } else {
-      toast.error("Invalid email or password.");
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (response.ok) {
+        toast.success("Login successful!");
+        const urlParams = new URLSearchParams(window.location.search);
+        const redirect = urlParams.get('redirect') || '/';
+        router.push(redirect);
+      } else {
+        const data = await response.json();
+        toast.error(data.error || "Login failed");
+      }
+    } catch (error) {
+      toast.error("An error occurred during login");
     }
   };
 
-  const handleSignUp = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSignUp = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget;
     const email = (form.elements.namedItem('email') as HTMLInputElement)?.value;
     const password = (form.elements.namedItem('password') as HTMLInputElement)?.value;
     const fullName = (form.elements.namedItem('fullName') as HTMLInputElement)?.value;
 
-    const newUser: User = {
-      email,
-      password,
-      fullName,
-      accountType,
-    };
+    // Split full name into first and last name
+    const [firstName, ...lastNameParts] = fullName.split(' ');
+    const lastName = lastNameParts.join(' ') || '';
 
-    if (mockSignUp(newUser)) {
-      toast.success("Sign-up successful! You can now log in.");
-    } else {
-      toast.error("User already exists. Please log in.");
+    try {
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          email, 
+          password, 
+          firstName, 
+          lastName 
+        }),
+      });
+
+      if (response.ok) {
+        toast.success("Account created successfully!");
+        const urlParams = new URLSearchParams(window.location.search);
+        const redirect = urlParams.get('redirect') || '/';
+        router.push(redirect);
+      } else {
+        const data = await response.json();
+        toast.error(data.error || "Registration failed");
+      }
+    } catch (error) {
+      toast.error("An error occurred during registration");
     }
   };
 
