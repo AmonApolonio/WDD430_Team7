@@ -5,10 +5,10 @@ import { fetchCustomerReviews } from '@/lib/api';
 import StarRating from '@/components/ui/StarRating';
 import ProfilePicture from '@/components/ui/ProfilePicture';
 import WriteReview from '@/components/customer/WriteReview';
-import { CustomerReview } from '@/types/customer';
+import { CustomerReview, CustomerReviewsResponse } from '@/types/customer';
 
 const CustomerReviewsContent = ({ productId }: { productId: string }) => {
-  const [reviewsData, setReviewsData] = useState<any>(null);
+  const [reviewsData, setReviewsData] = useState<CustomerReviewsResponse | null>(null);
   const [reloadFlag, setReloadFlag] = useState(0);
 
   const loadReviews = useCallback(async () => {
