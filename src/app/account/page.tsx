@@ -1,26 +1,23 @@
-import React, { Suspense } from 'react';
-import { fetchQuickStatsData, fetchPersonalInfoData } from "@/lib/api";
+"use client";
+
+import React from 'react';
+import { useAuth } from '@/hooks/useAuth';
 import { AccountPageSkeleton } from '@/components/ui/Skeletons';
 import AccountPageClient from './AccountPageClient';
+import { mockQuickStatsData, mockPersonalInfoData } from '@/lib/mockData';
 
-// Server Component that fetches data
-async function AccountContent() {
-  const quickStatsData = await fetchQuickStatsData();
-  const personalInfoData = await fetchPersonalInfoData();
+export default function AccountPage() {
+  const { loading } = useAuth();
 
+  if (loading) {
+    return <AccountPageSkeleton />;
+  }
+
+  // If we get here, user is authenticated
   return (
     <AccountPageClient 
-      initialQuickStats={quickStatsData} 
-      initialPersonalInfo={personalInfoData}
+      initialQuickStats={mockQuickStatsData} 
+      initialPersonalInfo={mockPersonalInfoData}
     />
-  );
-}
-
-// Main page component with Suspense wrapper
-export default function AccountPage() {
-  return (
-    <Suspense fallback={<AccountPageSkeleton />}>
-      <AccountContent />
-    </Suspense>
   );
 }

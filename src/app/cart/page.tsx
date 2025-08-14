@@ -1,17 +1,18 @@
 "use client";
 
-import Layout from '../../components/common/Layout';
-import { Button } from '../../components/ui/Button';
+import Layout from '@/components/common/Layout';
+import { Button } from '@/components/ui';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faMinus, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { fetchCartItems, fetchShippingAndTax, handleCheckout, handleRemoveFromCart } from "@/lib/api";
 import { CartItem } from "@/types/cart";
-import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import Image from 'next/image';
 import { CartPageSkeleton } from '@/components/ui/Skeletons';
+import { useAuth } from '@/hooks/useAuth';
 
 const formatCurrency = (value: number) => {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
@@ -243,11 +244,14 @@ function CartPageComponent({
   );
 }
 
-// Main page component with Suspense wrapper
+// Main page component with auth protection
 export default function CartPage() {
-  return (
-    <Suspense fallback={<CartPageSkeleton />}>
-      <CartContent />
-    </Suspense>
-  );
+  const { loading } = useAuth();
+
+  if (loading) {
+    return <CartPageSkeleton />;
+  }
+
+  // If we get here, user is authenticated
+  return <CartContent />;
 }
