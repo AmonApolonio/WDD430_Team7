@@ -2,7 +2,7 @@
 
 // Header component
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFilter, faUser, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
+import { faFilter, faUser, faShoppingCart, faSignOutAlt, faSignInAlt } from '@fortawesome/free-solid-svg-icons';
 
 import { useState } from 'react';
 import { Button } from '../ui/Button';
@@ -10,11 +10,13 @@ import { SearchBar } from '../ui/SearchBar';
 import Link from 'next/link';
 import Image from 'next/image';
 import { FiltersDialog } from './FiltersDialog';
+import { useAuthStatus } from '@/hooks/useAuth';
 
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const { user, loading, logout } = useAuthStatus();
   return (
     <header className="bg-white border-b-2 border-orange-300/50 p-4">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
@@ -65,26 +67,54 @@ export default function Header() {
 
         {/* Account and Cart Buttons (desktop) */}
         <div className="hidden md:flex items-center gap-3">
-          <Link href="/account">
-            <Button
-              variant="filled"
-              className="h-10 px-3 py-1"
-              grow={true}
-            >
-              <FontAwesomeIcon icon={faUser} className="h-4 w-4 mr-2" />
-              My Account
-            </Button>
-          </Link>
-          <Link href="/cart">
-            <Button
-              variant="filled"
-              className="h-10 px-3 py-1"
-              grow={true}
-            >
-              <FontAwesomeIcon icon={faShoppingCart} className="h-4 w-4 mr-2" />
-              Cart
-            </Button>
-          </Link>
+          {!loading && (
+            <>
+              {user ? (
+                <>
+                  <Link href="/account">
+                    <Button
+                      variant="filled"
+                      className="h-10 px-3 py-1"
+                      grow={true}
+                    >
+                      <FontAwesomeIcon icon={faUser} className="h-4 w-4 mr-2" />
+                      My Account
+                    </Button>
+                  </Link>
+                  <Link href="/cart">
+                    <Button
+                      variant="filled"
+                      className="h-10 px-3 py-1"
+                      grow={true}
+                    >
+                      <FontAwesomeIcon icon={faShoppingCart} className="h-4 w-4 mr-2" />
+                      Cart
+                    </Button>
+                  </Link>
+                  <Button
+                    variant="filled"
+                    className="h-10 px-3 py-1"
+                    grow={true}
+                    onClick={logout}
+                  >
+                    <FontAwesomeIcon icon={faSignOutAlt} className="h-4 w-4 mr-2" />
+                    Logout
+                  </Button>
+                </>
+              ) : (
+                <Link href="/login">
+                  <Button
+                    variant="filled"
+                    className="h-10 px-3 py-1"
+                    grow={true}
+                  >
+                    <FontAwesomeIcon icon={faSignInAlt} className="h-4 w-4 mr-2" />
+                    Login
+                  </Button>
+                </Link>
+              )}
+            </>
+          )}
         </div>
       </div>
 
@@ -123,26 +153,54 @@ export default function Header() {
             <FontAwesomeIcon icon={faFilter} className="h-4 w-4 mr-2" />
             Filters
           </Button>
-          <Link href="/account" onClick={() => setMobileMenuOpen(false)}>
-            <Button
-              variant="filled"
-              className="h-10 px-3 py-1 w-full"
-              grow={true}
-            >
-              <FontAwesomeIcon icon={faUser} className="h-4 w-4 mr-2" />
-              My Account
-            </Button>
-          </Link>
-          <Link href="/cart" onClick={() => setMobileMenuOpen(false)}>
-            <Button
-              variant="filled"
-              className="h-10 px-3 py-1 w-full"
-              grow={true}
-            >
-              <FontAwesomeIcon icon={faShoppingCart} className="h-4 w-4 mr-2" />
-              Cart
-            </Button>
-          </Link>
+          {!loading && (
+            <>
+              {user ? (
+                <>
+                  <Link href="/account" onClick={() => setMobileMenuOpen(false)}>
+                    <Button
+                      variant="filled"
+                      className="h-10 px-3 py-1 w-full"
+                      grow={true}
+                    >
+                      <FontAwesomeIcon icon={faUser} className="h-4 w-4 mr-2" />
+                      My Account
+                    </Button>
+                  </Link>
+                  <Link href="/cart" onClick={() => setMobileMenuOpen(false)}>
+                    <Button
+                      variant="filled"
+                      className="h-10 px-3 py-1 w-full"
+                      grow={true}
+                    >
+                      <FontAwesomeIcon icon={faShoppingCart} className="h-4 w-4 mr-2" />
+                      Cart
+                    </Button>
+                  </Link>
+                  <Button
+                    variant="filled"
+                    className="h-10 px-3 py-1 w-full"
+                    grow={true}
+                    onClick={() => { logout(); setMobileMenuOpen(false); }}
+                  >
+                    <FontAwesomeIcon icon={faSignOutAlt} className="h-4 w-4 mr-2" />
+                    Logout
+                  </Button>
+                </>
+              ) : (
+                <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
+                  <Button
+                    variant="filled"
+                    className="h-10 px-3 py-1 w-full"
+                    grow={true}
+                  >
+                    <FontAwesomeIcon icon={faSignInAlt} className="h-4 w-4 mr-2" />
+                    Login
+                  </Button>
+                </Link>
+              )}
+            </>
+          )}
         </div>
       </div>
       {/* Filters Dialog (modal) */}

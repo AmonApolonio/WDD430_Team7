@@ -4,7 +4,6 @@ export interface QuickStatsData {
   activeProducts: number;
   avgRating: number;
   totalReviews: number;
-  totalSales: number;
 }
 
 export interface PersonalInfoData {
@@ -12,13 +11,6 @@ export interface PersonalInfoData {
   email: string;
   phone: string;
   profilePictureUrl: string;
-}
-
-export interface BusinessInfoData {
-  businessName: string;
-  businessEmail: string;
-  businessPhone: string;
-  businessAddress: string;
 }
 
 export interface AccountStatsData {

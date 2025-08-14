@@ -303,10 +303,14 @@ function InventoryTabContent({
                     </Button>
                     <Button
                       className="flex items-center gap-1 text-orange-400 hover:text-orange-500"
-                      onClick={() => {
+                      onClick={async () => {
                         if (window.confirm('Are you sure you want to delete this item?')) {
-                          deleteInventoryItem(item.id);
-                          refreshInventory();
+                          const success = await deleteInventoryItem(item.id);
+                          if (success) {
+                            refreshInventory();
+                          } else {
+                            alert('Failed to delete item. Please try again.');
+                          }
                         }
                       }}
                     >
@@ -375,10 +379,14 @@ function InventoryTabContent({
                   </Button>
                   <Button
                     className="w-9 h-9 flex items-center justify-center p-0 bg-gray-50 hover:bg-red-50 text-red-500 border-none shadow-none rounded-full"
-                    onClick={() => {
+                    onClick={async () => {
                       if (window.confirm('Are you sure you want to delete this item?')) {
-                        deleteInventoryItem(item.id);
-                        refreshInventory();
+                        const success = await deleteInventoryItem(item.id);
+                        if (success) {
+                          refreshInventory();
+                        } else {
+                          alert('Failed to delete item. Please try again.');
+                        }
                       }
                     }}
                     aria-label="Delete"

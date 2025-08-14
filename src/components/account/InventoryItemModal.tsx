@@ -82,26 +82,43 @@ const InventoryItemModal: React.FC<InventoryItemModalProps> = (props) => {
 function InventoryItemModalContent({ open, mode, itemId, onClose, onSuccess }: InventoryItemModalProps) {
   const [item, setItem] = useState<InventoryData>(emptyItem);
   const [loading, setLoading] = useState(false);
+  const [categories, setCategories] = useState<string[]>([]);
+  const [statusOptions, setStatusOptions] = useState<string[]>([]);
+  const [dataLoading, setDataLoading] = useState(true);
   const isView = mode === 'view';
   const isEdit = mode === 'edit';
   const isAdd = mode === 'add';
 
-  // Suspense data fetching
-  const categories = categoriesResource.read();
-  const statusOptions = statusOptionsResource.read();
-  let fetchedItem: InventoryData | undefined = undefined;
-  if ((mode === 'view' || mode === 'edit') && itemId) {
-    const itemResource = createResource(fetchInventoryItemById(itemId));
-    fetchedItem = itemResource.read();
-  }
-
+  // Load data on modal open
   React.useEffect(() => {
-    if ((mode === 'view' || mode === 'edit') && itemId && fetchedItem) {
-      setItem(fetchedItem);
-    } else if (mode === 'add') {
-      setItem({ ...emptyItem, id: Date.now().toString() });
+    if (open) {
+      const loadData = async () => {
+        setDataLoading(true);
+        try {
+          const [categoriesData, statusData] = await Promise.all([
+            fetchCategoriesData(),
+            fetchStatusOptions()
+          ]);
+          setCategories(categoriesData);
+          setStatusOptions(statusData);
+
+          if ((mode === 'view' || mode === 'edit') && itemId) {
+            const fetchedItem = await fetchInventoryItemById(itemId);
+            if (fetchedItem) {
+              setItem(fetchedItem);
+            }
+          } else if (mode === 'add') {
+            setItem({ ...emptyItem, id: Date.now().toString() });
+          }
+        } catch (error) {
+          console.error('Error loading modal data:', error);
+        } finally {
+          setDataLoading(false);
+        }
+      };
+      loadData();
     }
-  }, [mode, itemId, open, fetchedItem]);
+  }, [mode, itemId, open]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -112,37 +129,84 @@ function InventoryItemModalContent({ open, mode, itemId, onClose, onSuccess }: I
     }
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     setLoading(true);
-    let imagesArr: string[] = [];
-    if (Array.isArray(item.images)) {
-      imagesArr = item.images;
-    } else {
-      imagesArr = String(item.images).split(',').map((img) => img.trim()).filter(Boolean);
-    }
-    const newItem = { ...item, images: imagesArr };
-    if (isEdit && itemId) {
-      updateInventoryItemById(itemId, newItem);
+    try {
+      let imagesArr: string[] = [];
+      if (Array.isArray(item.images)) {
+        imagesArr = item.images;
+      } else {
+        imagesArr = String(item.images).split(',').map((img) => img.trim()).filter(Boolean);
+      }
+      const newItem = { ...item, images: imagesArr };
+      
+      if (isEdit && itemId) {
+        const result = await updateInventoryItemById(itemId, newItem);
+        if (result) {
+          onSuccess();
+          onClose();
+        } else {
+          alert('Failed to update product. Please try again.');
+        }
+      } else if (isAdd) {
+        await addInventoryItem(newItem);
+        onSuccess();
+        onClose();
+      }
+    } catch (error) {
+      console.error('Error saving product:', error);
+      if (error instanceof Error && error.message.includes('Authentication required')) {
+        alert('Your session has expired. Please log out and log back in to continue.');
+      } else {
+        alert('Failed to save product. Please try again.');
+      }
+    } finally {
       setLoading(false);
-      onSuccess();
-      onClose();
-    } else if (isAdd) {
-      addInventoryItem(newItem);
-      setLoading(false);
-      onSuccess();
-      onClose();
     }
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (itemId) {
       setLoading(true);
-      deleteInventoryItem(itemId);
-      setLoading(false);
-      onSuccess();
-      onClose();
+      try {
+        const success = await deleteInventoryItem(itemId);
+        if (success) {
+          onSuccess();
+          onClose();
+        } else {
+          alert('Failed to delete product. Please try again.');
+        }
+      } catch (error) {
+        console.error('Error deleting product:', error);
+        alert('Failed to delete product. Please try again.');
+      } finally {
+        setLoading(false);
+      }
     }
   };
+
+  if (dataLoading) {
+    return (
+      <Modal open={open} onClose={onClose}>
+        <Box sx={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: 500,
+          bgcolor: 'background.paper',
+          boxShadow: 24,
+          p: 4,
+          borderRadius: 2,
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+          <Typography>Loading...</Typography>
+        </Box>
+      </Modal>
+    );
+  }
 
   return (
     <Modal open={open} onClose={onClose}>

@@ -1,7 +1,7 @@
 import { ItemDetails, ShoppingItem } from "@/types/shopping";
 import { CustomerReviewsResponse } from "@/types/customer";
 import { CartItem } from "@/types/cart";
-import { QuickStatsData, PersonalInfoData, BusinessInfoData, InventoryData } from "@/types/seller";
+import { QuickStatsData, PersonalInfoData, InventoryData } from "@/types/seller";
 
 
 export const mockShoppingItemsData: ShoppingItem[] = [
@@ -157,8 +157,7 @@ export const mockItemDetailsData: ItemDetails =
 };
 
 export const mockCustomerReviewsData: CustomerReviewsResponse = {
-
-  ratingBreakdown: {
+  summary: {
     totalReviews: 24,
     averageRating: 4.3,
     ratingsCount: {
@@ -235,7 +234,6 @@ export const mockQuickStatsData: QuickStatsData = {
   activeProducts: 24,
   avgRating: 4.9,
   totalReviews: 156,
-  totalSales: 5000,
 };
 
 export const mockPersonalInfoData: PersonalInfoData = {
@@ -243,13 +241,6 @@ export const mockPersonalInfoData: PersonalInfoData = {
   email: "sarah@potterystudio.com",
   phone: "+1 (555) 123-4567",
   profilePictureUrl: "/images/user_placeholder.png",
-};
-
-export const mockBusinessInfoData: BusinessInfoData = {
-  businessName: "Pottery Studio",
-  businessEmail: "contact@potterystudio.com",
-  businessPhone: "+1 (555) 987-6543",
-  businessAddress: "456 Artisan Avenue, Craft City, CC 67890",
 };
 
 export const mockInventoryData: InventoryData[] = [

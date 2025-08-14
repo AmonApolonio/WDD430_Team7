@@ -8,6 +8,7 @@ import { ShoppingItem } from '@/types/shopping';
 
 interface SearchPageClientProps {
   query: string;
+  category?: string;
   pageIndex: number;
   pageSize: number;
   totalCount: number;
@@ -78,12 +79,16 @@ function SearchPagination({
 
 export default function SearchPageClient({ 
   query, 
+  category,
   pageIndex, 
   pageSize, 
   totalCount, 
   products 
 }: SearchPageClientProps) {
-  if (!query) {
+  const searchTitle = category ? `${category} Products` : query ? `Search Results for "${query}"` : 'All Products';
+  const hasSearchCriteria = query || category;
+
+  if (!hasSearchCriteria) {
     return (
       <div className="text-center py-12">
         <h2 className="text-2xl font-bold text-gray-800 mb-4">Search for Products</h2>
@@ -96,7 +101,7 @@ export default function SearchPageClient({
     return (
       <div className="text-center py-12">
         <h2 className="text-2xl font-bold text-gray-800 mb-4">
-          No Results Found for &quot;{query}&quot;
+          No Results Found for {category ? `"${category}"` : `"${query}"`}
         </h2>
         <p className="text-gray-600">Try adjusting your search terms or browse our categories.</p>
       </div>
@@ -107,7 +112,7 @@ export default function SearchPageClient({
     <>
       <div className="mb-6 w-full">
         <h2 className="text-2xl font-bold text-gray-800 mb-2">
-          Search Results for &quot;{query}&quot;
+          {searchTitle}
         </h2>
         <div className="flex items-center justify-between">
           <p className="text-gray-600">
