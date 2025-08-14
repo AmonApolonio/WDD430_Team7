@@ -4,6 +4,8 @@ import { ToastContainer } from "react-toastify";
 import "../styles/globals.css";
 import "react-toastify/dist/ReactToastify.css";
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: "Handcraft Haven",
   description: "A marketplace for handmade crafts and goods",

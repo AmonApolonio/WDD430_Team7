@@ -6,12 +6,8 @@ import FeaturedSellerItems from "@/components/product/FeaturedSellerItems";
 import Image from "next/image";
 import { HomePageSkeleton } from "@/components/ui/Skeletons";
 
-export default function HomePage() {
-  return (
-    <Suspense fallback={<HomePageSkeleton />}>
-      <HomePageContent />
-    </Suspense>
-  );
+export async function getServerSideProps() {
+    return { props: {} };
 }
 
 async function HomePageContent() {
