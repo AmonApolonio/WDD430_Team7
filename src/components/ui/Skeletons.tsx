@@ -154,8 +154,8 @@ export const AccountPageSkeleton: React.FC = () => (
         {/* Quick Stats Skeleton */}
         <section>
           <div className="bg-gray-200 animate-pulse rounded h-8 w-32 mb-2"></div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {Array(4).fill(0).map((_, index) => (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {Array(3).fill(0).map((_, index) => (
               <div key={index} className="h-32 bg-gray-200 animate-pulse rounded-lg"></div>
             ))}
           </div>
@@ -169,15 +169,6 @@ export const AccountPageSkeleton: React.FC = () => (
 
       {/* Content Skeleton */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="border-2 border-orange-300/50 border-dashed p-6 space-y-4">
-          <div className="bg-gray-200 animate-pulse rounded h-6 w-48"></div>
-          {Array(4).fill(0).map((_, index) => (
-            <div key={index} className="space-y-2">
-              <div className="bg-gray-200 animate-pulse rounded h-4 w-24"></div>
-              <div className="bg-gray-200 animate-pulse rounded-lg h-10 w-full"></div>
-            </div>
-          ))}
-        </div>
         <div className="border-2 border-orange-300/50 border-dashed p-6 space-y-4">
           <div className="bg-gray-200 animate-pulse rounded h-6 w-48"></div>
           {Array(3).fill(0).map((_, index) => (

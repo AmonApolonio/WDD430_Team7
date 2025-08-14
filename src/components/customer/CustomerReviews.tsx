@@ -31,11 +31,11 @@ const CustomerReviewsContent = ({ productId }: { productId: string }) => {
         <h2 className="text-2xl font-bold text-gray-800">Customer Reviews</h2>
         <div className="flex items-center gap-4">
           <div className="text-center">
-            <div className="text-3xl font-bold text-gray-800">{reviewsData.ratingBreakdown.averageRating}</div>
+            <div className="text-3xl font-bold text-gray-800">{reviewsData.summary.averageRating}</div>
             <div className="flex items-center gap-1 mb-1">
-              <StarRating rating={reviewsData.ratingBreakdown.averageRating}/>
+              <StarRating rating={reviewsData.summary.averageRating}/>
             </div>
-            <div className="text-sm text-gray-600">{reviewsData.ratingBreakdown.totalReviews} reviews</div>
+            <div className="text-sm text-gray-600">{reviewsData.summary.totalReviews} reviews</div>
           </div>
         </div>
       </div>
@@ -49,10 +49,10 @@ const CustomerReviewsContent = ({ productId }: { productId: string }) => {
               <div className="flex-1 bg-gray-300/40 rounded-full h-2">
                 <div
                   className="bg-yellow-400 h-2 rounded-full"
-                  style={{ width: `${(reviewsData.ratingBreakdown.ratingsCount[stars as 1 | 2 | 3 | 4 | 5] || 0) / reviewsData.ratingBreakdown.totalReviews * 100}%` }}
+                  style={{ width: `${(reviewsData.summary.ratingsCount[stars as 1 | 2 | 3 | 4 | 5] || 0) / reviewsData.summary.totalReviews * 100}%` }}
                 ></div>
               </div>
-              <span className="text-sm text-gray-600 w-8">{reviewsData.ratingBreakdown.ratingsCount[stars as 1 | 2 | 3 | 4 | 5] || 0}</span>
+              <span className="text-sm text-gray-600 w-8">{reviewsData.summary.ratingsCount[stars as 1 | 2 | 3 | 4 | 5] || 0}</span>
             </div>
           ))}
         </div>

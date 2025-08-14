@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faBox, faPen} from '@fortawesome/free-solid-svg-icons';
 import { Button } from '@/components/ui/Button';
 import { QuickStatsData, PersonalInfoData } from "@/types/seller";
+import { User } from "@/types/user";
 import ProfilePicture from '@/components/ui/ProfilePicture';
 import ProfileTab from '@/components/account/ProfileTab';
 import InventoryTab from '@/components/account/InventoryTab';
@@ -13,10 +14,12 @@ import { toast } from 'react-toastify';
 
 // Client component for account functionality
 export default function AccountPageClient({ 
+  user,
   initialQuickStats, 
   initialPersonalInfo 
 }: { 
-  initialQuickStats: QuickStatsData;
+  user: User;
+  initialQuickStats: QuickStatsData | null;
   initialPersonalInfo: PersonalInfoData;
 }) {
   const [activeTab, setActiveTab] = useState('profile');
@@ -44,7 +47,9 @@ export default function AccountPageClient({
             </div>
             <div>
               <h1 className="text-2xl font-bold text-gray-800">Welcome back, {personalInfo?.fullName}!</h1>
-              <p className="text-gray-600">Seller Dashboard</p>
+              <p className="text-gray-600">
+                {user.isSeller ? 'Seller Dashboard' : 'Customer Dashboard'}
+              </p>
             </div>
           </div>
 
@@ -52,7 +57,7 @@ export default function AccountPageClient({
           {quickStats && (
             <section>
               <h2 className="text-2xl font-bold text-gray-800 mb-2">Quick Stats</h2>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="h-32 bg-orange-50 border-2 border-orange-300/50 border-dashed rounded-lg flex flex-col items-center justify-center transition-transform transform hover:scale-105 hover:bg-orange-300 hover:text-gray-800 cursor-pointer group">
                   <span className="text-2xl font-bold text-orange-400 group-hover:text-gray-700">{quickStats.activeProducts}</span>
                   <span className="text-sm text-gray-600">Active Products</span>
@@ -65,10 +70,6 @@ export default function AccountPageClient({
                   <span className="text-2xl font-bold text-orange-400 group-hover:text-gray-700">{quickStats.totalReviews}</span>
                   <span className="text-sm text-gray-600">Total Reviews</span>
                 </div>
-                <div className="h-32 bg-orange-50 border-2 border-orange-300/50 border-dashed rounded-lg flex flex-col items-center justify-center transition-transform transform hover:scale-105 hover:bg-orange-300 hover:text-gray-800 cursor-pointer group">
-                  <span className="text-2xl font-bold text-orange-400 group-hover:text-gray-700">{quickStats.totalSales}</span>
-                  <span className="text-sm text-gray-600">Total Sales</span>
-                </div>
               </div>
             </section>
           )}
@@ -76,34 +77,47 @@ export default function AccountPageClient({
 
         {/* Tabs Navigation */}
         <div className="w-full mb-6">
-          <div className="flex w-full mb-6 relative max-w-full">
-            <div
-              className={`absolute top-0 h-full w-1/2 bg-orange-300 transition-transform duration-300 ease-in-out ${activeTab === 'profile' ? 'translate-x-0 rounded-l-lg' : 'translate-x-full rounded-r-lg'}`}
-            ></div>
-            <Button
-              className={`flex items-center justify-center gap-2 px-4 py-2 rounded-l-lg transition-colors relative z-10 flex-1 ${activeTab === 'profile' ? 'text-white' : 'bg-orange-50 text-orange-400 hover:bg-orange-100'}`}
-              onClick={() => setActiveTab('profile')}
-            >
-              <FontAwesomeIcon icon={faUser} className="h-4 w-4" />
-              Profile
-            </Button>
-            <Button
-              className={`flex items-center justify-center gap-2 px-4 py-2 rounded-r-lg transition-colors relative z-10 flex-1 ${activeTab === 'inventory' ? 'text-white' : 'bg-orange-50 text-orange-400 hover:bg-orange-100'}`}
-              onClick={() => setActiveTab('inventory')}
-            >
-              <FontAwesomeIcon icon={faBox} className="h-4 w-4" />
-              Inventory
-            </Button>
-          </div>
+          {user.isSeller ? (
+            // Seller tabs
+            <div className="flex w-full mb-6 relative max-w-full">
+              <div
+                className={`absolute top-0 h-full w-1/2 bg-orange-300 transition-transform duration-300 ease-in-out ${activeTab === 'profile' ? 'translate-x-0 rounded-l-lg' : 'translate-x-full rounded-r-lg'}`}
+              ></div>
+              <Button
+                className={`flex items-center justify-center gap-2 px-4 py-2 rounded-l-lg transition-colors relative z-10 flex-1 ${activeTab === 'profile' ? 'text-white' : 'bg-orange-50 text-orange-400 hover:bg-orange-100'}`}
+                onClick={() => setActiveTab('profile')}
+              >
+                <FontAwesomeIcon icon={faUser} className="h-4 w-4" />
+                Profile
+              </Button>
+              <Button
+                className={`flex items-center justify-center gap-2 px-4 py-2 rounded-r-lg transition-colors relative z-10 flex-1 ${activeTab === 'inventory' ? 'text-white' : 'bg-orange-50 text-orange-400 hover:bg-orange-100'}`}
+                onClick={() => setActiveTab('inventory')}
+              >
+                <FontAwesomeIcon icon={faBox} className="h-4 w-4" />
+                Inventory
+              </Button>
+            </div>
+          ) : (
+            // Buyer tabs (only profile for now)
+            <div className="flex w-full mb-6 relative max-w-full">
+              <Button
+                className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-orange-300 text-white w-full"
+              >
+                <FontAwesomeIcon icon={faUser} className="h-4 w-4" />
+                Profile
+              </Button>
+            </div>
+          )}
         </div>
 
         {/* Tabs Content */}
-
+        
         {activeTab === 'profile' && (
           <ProfileTab personalInfo={personalInfo} />
         )}
 
-        {activeTab === 'inventory' && (
+        {activeTab === 'inventory' && user.isSeller && (
           <Suspense fallback={<div className="flex justify-center items-center py-10 text-orange-400 text-lg font-semibold">Loading inventory...</div>}>
             <InventoryTab />
           </Suspense>

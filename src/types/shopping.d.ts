@@ -5,10 +5,13 @@ export interface PaginatedData<T> {
   pageIndex: number;
 }
 
-interface SearchFilters {
+export interface SearchFilters {
   priceRange: [number, number];
   selectedCategories: string[];
   selectedRatings: number[];
+  category?: string;
+  minPrice?: number;
+  maxPrice?: number;
 }
 
 export interface ShoppingItem {

@@ -23,6 +23,6 @@ export interface RatingBreakdown {
 
 // Interface for customer reviews response
 export interface CustomerReviewsResponse {
-  ratingBreakdown: RatingBreakdown;
+  summary: RatingBreakdown;
   reviews: CustomerReview[];
 }

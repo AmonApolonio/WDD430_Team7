@@ -79,8 +79,10 @@ function CartPageComponent({
 
   const handleCheckoutClick = async () => {
     try {
-      const response = await handleCheckout();
-      if (response.status === 200) {
+      // For now, use a placeholder shipping address
+      const shippingAddress = "123 Main St, City, State 12345";
+      const response = await handleCheckout(shippingAddress);
+      if (response.status === 200 || response.status === 201) {
         toast.success(response.message);
         router.push('/');
       } else {
@@ -92,9 +94,10 @@ function CartPageComponent({
     }
   };
 
-  const handleRemoveItem = async (itemId: string, index: number) => {
+  const handleRemoveItem = async (item: CartItem, index: number) => {
     try {
-      const response = await handleRemoveFromCart(itemId);
+      const cartItemId = item.cartItemId || item.shoppingItem.id;
+      const response = await handleRemoveFromCart(cartItemId);
       if (response.status === 200) {
         toast.success(response.message);
         setQuantities((prev) => prev.filter((_, i) => i !== index));
@@ -149,7 +152,7 @@ function CartPageComponent({
                 <div key={item.shoppingItem.id} className="border-b-2 border-orange-300/50 p-4 relative">
                   <Button
                     className="absolute top-2 right-2 text-red-600 hover:text-red-700"
-                    onClick={() => handleRemoveItem(item.shoppingItem.id, index)}
+                    onClick={() => handleRemoveItem(item, index)}
                   >
                     <FontAwesomeIcon icon={faTrash} className="h-4 w-4" />
                   </Button>
