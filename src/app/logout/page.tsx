@@ -22,7 +22,7 @@ export default function LogoutPage() {
         } else {
           toast.error("Logout failed");
         }
-      } catch (error) {
+      } catch {
         toast.error("An error occurred during logout");
       } finally {
         // Redirect to home page regardless of success/failure
