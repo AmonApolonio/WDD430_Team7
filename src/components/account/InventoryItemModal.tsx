@@ -67,10 +67,6 @@ const emptyItem: InventoryData = {
   views: 0,
 };
 
-
-const categoriesResource = createResource(fetchCategoriesData());
-const statusOptionsResource = createResource(fetchStatusOptions());
-
 const InventoryItemModal: React.FC<InventoryItemModalProps> = (props) => {
   return (
     <Suspense fallback={<div className="p-8 text-center">Loading item...</div>}>

@@ -2,10 +2,6 @@
 // Shared delay time for all API mocks (ms)
 export const DELAY_TIME = 500;
 
-// artificial delay for suspense testing
-function delay(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
 // API utility functions
 
 // Import mock data
@@ -537,7 +533,7 @@ export async function fetchPersonalInfoData(): Promise<PersonalInfoData> {
 export async function updatePersonalInfoData(data: Partial<PersonalInfoData>): Promise<PersonalInfoData> {
   try {
     // Split fullName into firstName and lastName if provided
-    let updateData: any = {};
+    const updateData: any = {};
     
     if (data.fullName) {
       const nameParts = data.fullName.trim().split(' ');

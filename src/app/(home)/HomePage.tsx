@@ -16,7 +16,7 @@ export default function HomePage() {
 
 async function HomePageContent() {
   const { items }: { items: ShoppingItem[] } = (await fetchItemsGridData()) || { items: [] };
-  const categories = await fetchCategoriesData();
+  // const categories = await fetchCategoriesData();
 
   return (
     <div className="bg-white">
