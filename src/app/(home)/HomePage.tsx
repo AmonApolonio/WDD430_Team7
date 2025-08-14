@@ -1,13 +1,17 @@
 
 import React, { Suspense } from "react";
-import { fetchCategoriesData, fetchItemsGridData } from "@/lib/api";
+import { fetchItemsGridData } from "@/lib/api";
 import { ShoppingItem } from "@/types/shopping";
 import FeaturedSellerItems from "@/components/product/FeaturedSellerItems";
 import Image from "next/image";
 import { HomePageSkeleton } from "@/components/ui/Skeletons";
 
-export async function getServerSideProps() {
-    return { props: {} };
+export default function HomePage() {
+  return (
+    <Suspense fallback={<HomePageSkeleton />}>
+      <HomePageContent />
+    </Suspense>
+  );
 }
 
 async function HomePageContent() {
