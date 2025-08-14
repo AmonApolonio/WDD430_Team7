@@ -128,7 +128,7 @@ export default function AccountPage() {
         const data = await response.json();
         toast.error(data.error || "Login failed");
       }
-    } catch (error) {
+    } catch {
       toast.error("An error occurred during login");
     }
   };
@@ -167,7 +167,7 @@ export default function AccountPage() {
         const data = await response.json();
         toast.error(data.error || "Registration failed");
       }
-    } catch (error) {
+    } catch {
       toast.error("An error occurred during registration");
     }
   };
